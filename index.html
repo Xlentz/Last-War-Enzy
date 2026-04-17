@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last War Enzy – by XLentz</title>
+    
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <style>
+        :root {
+            --bg-dark: #0d0f11;
+            --bg-panel: #161b22;
+            --primary: #4ade80; 
+            --accent: #fbbf24;  
+            --text: #e2e8f0;
+            --dim: #64748b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            margin: 0;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* BOOT SCREEN */
+        #boot-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .boot-loader {
+            width: 150px; height: 150px; border-radius: 20px;
+            border: 2px solid var(--primary); box-shadow: 0 0 20px var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0.5; transform: scale(0.95); } }
+
+        /* HEADER */
+        header {
+            background: #161b22; padding: 15px; border-bottom: 2px solid var(--primary);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-text { font-weight: bold; letter-spacing: 2px; color: var(--primary); }
+
+        /* SIDE MENU & DROPDOWNS */
+        #sideMenu {
+            position: fixed; left: -280px; top: 0; width: 260px; height: 100%;
+            background: var(--bg-panel); z-index: 2000; transition: 0.3s;
+            border-right: 1px solid var(--primary); overflow-y: auto; padding: 20px 10px;
+        }
+        #sideMenu.open { left: 0; }
+        .menu-item { padding: 12px; border-bottom: 1px solid #2d3748; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; }
+        .menu-item:hover { color: var(--primary); }
+        
+        .menu-toggle::after { content: ' ▼'; font-size: 0.6rem; float: right; color: var(--dim); }
+        .menu-toggle.open::after { content: ' ▲'; color: var(--primary); }
+        
+        .submenu { display: none; background: #0d0f11; border-left: 2px solid var(--dim); margin-left: 10px; }
+        .submenu.open { display: block; animation: fadeIn 0.3s ease; }
+        .submenu-item { padding: 10px 15px; font-size: 0.75rem; color: var(--dim); cursor: pointer; border-bottom: 1px dotted #2d3748; }
+        .submenu-item:hover { color: var(--primary); background: #1f2937; }
+
+        /* CONTENT */
+        .container { padding: 15px; max-width: 800px; margin: auto; }
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: rgba(22, 27, 34, 0.9); border-left: 4px solid var(--primary); padding: 15px; margin-bottom: 20px; }
+        .card.alert { border-left-color: var(--danger); }
+        h2 { color: var(--accent); border-bottom: 1px solid var(--dim); padding-bottom: 5px; font-size: 1.1rem; text-transform: uppercase; }
+        h3 { color: var(--primary); font-size: 0.95rem; margin-top: 0; }
+        h4 { color: #fff; font-size: 0.85rem; margin-bottom: 5px; border-bottom: 1px dashed var(--dim); display: inline-block; }
+        ul { padding-left: 20px; margin-top: 5px; }
+        li { margin-bottom: 8px; font-size: 0.85rem; }
+        p { font-size: 0.85rem; margin-top: 5px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; margin-bottom: 15px; }
+        th, td { border: 1px solid #2d3748; padding: 8px; text-align: left; }
+        th { background: #1f2937; color: var(--accent); }
+        strong { color: var(--accent); }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: #161b22;
+            display: flex; justify-content: space-around; padding: 10px 0;
+            border-top: 1px solid var(--primary); z-index: 1000;
+        }
+        .nav-btn { color: var(--dim); font-size: 0.7rem; text-align: center; cursor: pointer; }
+        .nav-btn.active { color: var(--primary); }
+
+        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; }
+        .signature { text-align: center; font-size: 0.6rem; color: var(--dim); margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="boot-screen">
+    <img src="apple-touch-icon.png" class="boot-loader" onerror="this.src='https://via.placeholder.com/150/000000/4ade80?text=LW+ENZY'">
+    <p style="color: var(--primary); margin-top: 20px; font-family: monospace;">LOADING S2 DATABASE...</p>
+</div>
+
+<div id="overlay" onclick="toggleMenu()"></div>
+
+<div id="sideMenu">
+    <h3 style="color: var(--primary); padding-left: 10px;">ENZY DATABASE</h3>
+    <div class="menu-item" onclick="openSection('intro')">01. Einführung</div>
+    <div class="menu-item" onclick="openSection('basics')">02. Grundlagen</div>
+    <div class="menu-item" onclick="openSection('heroes')">03. Helden</div>
+    <div class="menu-item" onclick="openSection('build')">04. Gebäude</div>
+    
+    <div class="menu-item menu-toggle" id="toggle-s2" onclick="toggleSubmenu('sub-s2', this)">11. Season 2 (S2)</div>
+    <div id="sub-s2" class="submenu">
+        <div class="submenu-item" onclick="openAndScroll('s2', 's2-intro')">11.1 Map & Verlauf</div>
+        <div class="submenu-item" onclick="openAndScroll('s2', 's2-mechanics')">11.2 Kohle & Frost-Debuffs</div>
+        <div class="submenu-item" onclick="openAndScroll('s2', 's2-heroes')">11.3 Helden & UR-Waffen</div>
+        <div class="submenu-item" onclick="openAndScroll('s2', 's2-research')">11.4 Forschungsbaum</div>
+        <div class="submenu-item" onclick="openAndScroll('s2', 's2-events')">11.5 S2 Events (Dig/Train)</div>
+        <div class="submenu-item" onclick="openAndScroll('s2', 's2-hive')">11.6 Hive & -19°C Trick</div>
+        <div class="submenu-item" onclick="openAndScroll('s2', 's2-end')">11.7 Season-Ende & Markt</div>
+    </div>
+
+    <div class="menu-item" onclick="openSection('calc')">17. Kalkulatoren</div>
+</div>
+
+<header>
+    <div onclick="toggleMenu()" style="cursor:pointer; font-size: 1.5rem; color: var(--primary);">☰</div>
+    <div class="logo-text">LAST WAR ENZY</div>
+    <button onclick="toggleLang()" id="langBtn" style="background:none; border: 1px solid var(--primary); color: var(--primary); padding: 5px; cursor: pointer;">EN</button>
+</header>
+
+<div class="container">
+    
+    <div id="intro" class="section active">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="apple-touch-icon.png" style="width: 120px; border-radius: 15px; border: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary);" onerror="this.style.display='none'">
+        </div>
+        <h2 data-de="01. Einführung" data-en="01. Introduction">01. Einführung</h2>
+        <div class="card">
+            <p data-de="Willkommen Kommandant. Diese Enzyklopädie vereint tiefgreifendes Wissen aus dem Wiki, Reddit und Top-Community-Guides (wie cpt-hedge)." 
+               data-en="Welcome Commander. This encyclopedia combines deep knowledge from the Wiki, Reddit, and top community guides (like cpt-hedge)."></p>
+            <p><strong>Version:</strong> 1.3.0 (S2 Deep Dive)</p>
+            <p><strong>Author:</strong> XLentz</p>
+        </div>
+        <div class="signature">© XLentz</div>
+    </div>
+
+    <div id="s2" class="section">
+        <h2 data-de="Season 2: Polarsturm (S2)" data-en="Season 2: Polar World (S2)">Season 2: Polarsturm (S2)</h2>
+        
+        <div class="card" id="s2-intro">
+            <h3 data-de="11.1 Map & Saison-Verlauf" data-en="11.1 Map & Season Timeline">11.1 Map & Saison-Verlauf</h3>
+            <p data-de="S2 ist ein 8-wöchiger Überlebenskampf gegen extreme Kälte. Die Map ist ringförmig in Temperaturzonen unterteilt. Je näher man dem Zentrum (Capitol) kommt, desto kälter wird es." 
+               data-en="S2 is an 8-week battle for survival against extreme cold. The map is divided into ring-shaped temperature zones. The closer you get to the center (Capitol), the colder it gets."></p>
+            <table style="margin-top: 10px;">
+                <tr><th data-de="Zone" data-en="Zone">Zone</th><th data-de="Temperatur" data-en="Temperature">Temperatur</th><th data-de="Wochen-Freischaltung" data-en="Week Unlock">Wochen-Freischaltung</th></tr>
+                <tr><td>Outer Ring</td><td>-15°C bis -30°C</td><td>Woche 1-2</td></tr>
+                <tr><td>Middle Ring</td><td>-40°C bis -60°C</td><td>Woche 3-4</td></tr>
+                <tr><td>Capitol Area</td><td>-80°C</td><td>Woche 5+</td></tr>
+            </table>
+            <p data-de="<strong>Siegesbedingung:</strong> Anders als in S1 gewinnt nicht die Allianz, die am Ende das Capitol hält, sondern die Allianz mit der insgesamt höchsten kumulierten Menge an <strong>Rare Soil (Seltene Erde)</strong> über die gesamte Saison." 
+               data-en="<strong>Victory Condition:</strong> Unlike S1, the winner is not the alliance holding the Capitol at the end, but the alliance with the highest total accumulated amount of <strong>Rare Soil</strong> throughout the season."></p>
+        </div>
+
+        <div class="card alert" id="s2-mechanics">
+            <h3 data-de="11.2 Kohle & Frost-Debuffs" data-en="11.2 Coal & Frostbite Debuffs">11.2 Kohle & Frost-Debuffs</h3>
+            <h4 data-de="Der Frost-Status" data-en="The Frozen Status">Der Frost-Status</h4>
+            <p data-de="Fällt die Temperatur deiner Basis auf oder unter <strong>-20°C</strong>, friert deine Basis ein. Das hat katastrophale Folgen:" 
+               data-en="If your base temperature drops to or below <strong>-20°C</strong>, your base freezes. This has catastrophic consequences:"></p>
+            <ul>
+                <li data-de="Kein Starten von Rallies mehr möglich (Beitreten geht noch)." data-en="Cannot start rallies (joining is still possible)."></li>
+                <li data-de="Marschgeschwindigkeit wird um <strong>50%</strong> reduziert." data-en="March speed is reduced by <strong>50%</strong>."></li>
+                <li data-de="Truppen erleiden massive Debuffs (Angriff/Verteidigung sinken drastisch)." data-en="Troops suffer massive debuffs (Attack/Defense drop drastically)."></li>
+            </ul>
+            
+            <h4 data-de="Ressource: Kohle (Coal)" data-en="Resource: Coal" style="margin-top: 15px;">Ressource: Kohle (Coal)</h4>
+            <p data-de="Kohle ist der Treibstoff für deinen Ofen. Du benötigst täglich Millionen davon." data-en="Coal is the fuel for your furnace. You need millions of it daily."></p>
+            <ul>
+                <li data-de="<strong>Täglicher Grind:</strong> Greife immer den höchsten verfügbaren Doom Walker an. Der <em>First-Blood-Bonus</em> gewährt einen enormen Kohle-Schub." data-en="<strong>Daily Grind:</strong> Always attack the highest available Doom Walker. The <em>First Blood Bonus</em> grants a huge coal boost."></li>
+                <li data-de="<strong>Kohle-Minen:</strong> Sammle in der Welt aktiv an Kohle-Minen, besonders über Nacht." data-en="<strong>Coal Mines:</strong> Actively gather at coal mines in the world, especially overnight."></li>
+            </ul>
+        </div>
+
+        <div class="card" id="s2-heroes">
+            <h3 data-de="11.3 Helden & Gebäude-Prioritäten" data-en="11.3 Heroes & Building Priorities">11.3 Helden & Gebäude-Prioritäten</h3>
+            <h4 data-de="S2 Meta-Helden" data-en="S2 Meta Heroes">S2 Meta-Helden</h4>
+            <ul>
+                <li data-de="<strong>Lucius (Air / Tank):</strong> S+ Tier. Seine Schilde machen Air-Squads extrem ausdauernd. Ein Muss für Aircraft-Spieler." data-en="<strong>Lucius (Air / Tank):</strong> S+ Tier. His shields make Air squads extremely durable. A must-have for Aircraft players."></li>
+                <li data-de="<strong>Violet UR-Upgrade:</strong> Violet kann in S2 auf Gold (UR) aufgewertet werden. Mit Murphy bildet sie eine günstige, aber extrem starke Frontline für F2P/Low-Spender." data-en="<strong>Violet UR Upgrade:</strong> Violet can be upgraded to Gold (UR) in S2. With Murphy, she forms a cheap but extremely strong frontline for F2P/Low-spenders."></li>
+            </ul>
+
+            <h4 data-de="Die UR-Waffen (Exclusive Weapons)" data-en="UR Weapons (Exclusive Weapons)" style="margin-top: 15px;">Die UR-Waffen (Exclusive Weapons)</h4>
+            <p data-de="In S2 erhalten erste Helden ihre exklusiven UR-Waffen. Diese werden im Waffen-Zentrum gelevelt." data-en="In S2, the first heroes get their exclusive UR weapons. These are leveled up in the Weapon Center."></p>
+            <table style="margin-top: 5px;">
+                <tr><th data-de="Held" data-en="Hero">Held</th><th data-de="Waffen-Fokus" data-en="Weapon Focus">Waffen-Fokus</th></tr>
+                <tr><td>Murphy</td><td data-de="Höchste Prio! Auf <strong>Level 10</strong> gibt sie Schadensreduktion für die Frontreihe. Auf <strong>Level 20</strong> Schadensreduktion für das GESAMTE Team." data-en="Highest Prio! At <strong>Level 10</strong> it gives damage reduction for the front row. At <strong>Level 20</strong> damage reduction for the ENTIRE team.">Höchste Prio! Auf <strong>Level 10</strong> gibt sie Schadensreduktion für die Frontreihe. Auf <strong>Level 20</strong> Schadensreduktion für das GESAMTE Team.</td></tr>
+                <tr><td>DVA / Carlie</td><td data-de="Sekundäres Ziel für Spieler, die voll auf Flugzeuge (Aircraft) setzen." data-en="Secondary target for players focusing fully on Aircraft.">Sekundäres Ziel für Spieler, die voll auf Flugzeuge (Aircraft) setzen.</td></tr>
+            </table>
+
+            <h4 data-de="Gebäude" data-en="Buildings" style="margin-top: 15px;">Gebäude</h4>
+            <p data-de="<strong>Hochtemperaturofen:</strong> Level ihn so schnell wie möglich. Er schützt vor Kälte und erhöht deine Virusresistenz für High-Level Doom Walker. <em>Tipp:</em> Level 20 ist ein wichtiger Meilenstein für die Effizienz." data-en="<strong>High-Temp Furnace:</strong> Level it as fast as possible. It protects against cold and increases virus resistance for high-level Doom Walkers. <em>Tip:</em> Level 20 is a major efficiency milestone."></p>
+        </div>
+
+        <div class="card" id="s2-research">
+            <h3 data-de="11.4 Der S2 Forschungsbaum" data-en="11.4 The S2 Tech Tree">11.4 Der S2 Forschungsbaum</h3>
+            <p data-de="Das Forschungszentrum erhält einen neuen Reiter für Polar-Forschung. Nutze Mutanten-Kristalle weise:" data-en="The Research Center gets a new tab for Polar Research. Use Mutant Crystals wisely:"></p>
+            <ul>
+                <li data-de="<strong>Prio 1: Kohle-Sammelgeschwindigkeit.</strong> Level dies früh, um deinen Ofen auf Dauer füttern zu können." data-en="<strong>Prio 1: Coal Gathering Speed.</strong> Level this early to feed your furnace long-term."></li>
+                <li data-de="<strong>Prio 2: Intensive Overload.</strong> Gibt dir bis zu +6°C Basis-Temperatur. Absolut kritisch für den -19°C Trick (siehe Kapitel 11.6)." data-en="<strong>Prio 2: Intensive Overload.</strong> Gives you up to +6°C base temperature. Absolutely critical for the -19°C trick (see chapter 11.6)."></li>
+            </ul>
+        </div>
+
+        <div class="card" id="s2-events">
+            <h3 data-de="11.5 Events & Taktiken" data-en="11.5 Events & Tactics">11.5 Events & Taktiken</h3>
+            <ul>
+                <li data-de="<strong>Polar Dig Site (Ausgrabungen):</strong> Eine Allianz kann Dig Sites besetzen. Wenn eine freigeschaltet wird, taut ein Boss-Monster auf. Besiegt es per Rally und schickt <strong>sofort 10 volle Marsch-Teams</strong> als Verstärkung, um Plünderer (Server-Feinde) abzuwehren." data-en="<strong>Polar Dig Site:</strong> An alliance can occupy Dig Sites. When unlocked, a boss monster thaws. Defeat it via rally and <strong>immediately send 10 full march teams</strong> as reinforcement to fend off looters (server enemies)."></li>
+                <li data-de="<strong>Schneestürme (Blizzards):</strong> Werden vorher angekündigt. Die Temperatur fällt drastisch. Sammeln ist in dieser Zeit extrem ineffizient. Hier muss der Ofen auf Automatik/Overdrive laufen." data-en="<strong>Blizzards:</strong> Announced in advance. Temperature drops drastically. Gathering is extremely inefficient during this time. The furnace must run on automatic/overdrive here."></li>
+                <li data-de="<strong>LKW-Trick (Start S2):</strong> Starte deine 3 Plünder-LKWs 5 Minuten bevor der Server in die Season 2 Map wechselt. Beim Neustart schließen sie sofort ab – sicherer Loot!" data-en="<strong>Truck Trick (Start S2):</strong> Start your 3 loot trucks 5 minutes before the server switches to the Season 2 map. Upon restart, they finish immediately - safe loot!"></li>
+            </ul>
+        </div>
+
+        <div class="card" id="s2-hive">
+            <h3 data-de="11.6 Hive-Management & Der -19°C Trick" data-en="11.6 Hive Management & The -19°C Trick">11.6 Hive-Management & Der -19°C Trick</h3>
+            <p data-de="Kohleverschwendung ist der häufigste Fehler in S2. Die Allianz-Leitung (R4/R5) sollte den <strong>Allianz-Ofen</strong> nur bei Blizzards oder im Server-Krieg zünden." data-en="Wasting coal is the most common mistake in S2. Alliance leadership (R4/R5) should ignite the <strong>Alliance Furnace</strong> only during blizzards or server wars."></p>
+            
+            <h4 data-de="Der -19°C Spar-Trick" data-en="The -19°C Saving Trick" style="margin-top: 15px;">Der -19°C Spar-Trick</h4>
+            <p data-de="Das Ziel ist es, knapp über der Einfrier-Grenze (-20°C) zu bleiben, ohne den privaten Ofen massiv hochfahren zu müssen. So geht's:" data-en="The goal is to stay just above the freezing limit (-20°C) without having to massively crank up the private furnace. Here is how:"></p>
+            <ol>
+                <li data-de="Platziere das Monument <strong>Tower of Victory</strong> (aus S1 oder aus dem Shop für 800 Tickets) in deiner Basis. Auf Level 3 gibt es passiv <strong>+5°C</strong>." data-en="Place the <strong>Tower of Victory</strong> monument (from S1 or shop for 800 tickets) in your base. At level 3 it gives a passive <strong>+5°C</strong>."></li>
+                <li data-de="Erforsche <strong>Intensive Overload</strong> im S2 Tech Tree für weitere <strong>+6°C</strong>." data-en="Research <strong>Intensive Overload</strong> in the S2 Tech Tree for another <strong>+6°C</strong>."></li>
+                <li data-de="Ergebnis: Selbst in einer -30°C Zone bleibt deine Basis auf exakt -19°C. Du sparst Millionen an Kohle und frierst nicht ein!" data-en="Result: Even in a -30°C zone, your base stays at exactly -19°C. You save millions of coal and do not freeze!"></li>
+            </ol>
+        </div>
+
+        <div class="card" id="s2-end">
+            <h3 data-de="11.7 Season-Ende & Schwarzmarkt" data-en="11.7 Season End & Black Market">11.7 Season-Ende & Schwarzmarkt</h3>
+            <p data-de="In Woche 8 öffnet der <strong>Black Market (Schwarzmarkt)</strong>. Hier tauschst du S2-Materialien gegen eine spezielle Währung." data-en="In week 8, the <strong>Black Market</strong> opens. Here you trade S2 materials for a special currency."></p>
+            <ul>
+                <li data-de="<strong>Priorität 1:</strong> Kaufe AUSSCHLIESSLICH <em>Exclusive Weapon Shard Choice Boxes</em>. Das ist die günstigste Möglichkeit im gesamten Spiel, Murphy's Waffe auf Level 20 zu bringen." data-en="<strong>Priority 1:</strong> Buy EXCLUSIVELY <em>Exclusive Weapon Shard Choice Boxes</em>. This is the cheapest way in the entire game to get Murphy's weapon to level 20."></li>
+                <li data-de="<strong>Warnung:</strong> Kaufe keine Waffensplitter im regulären Honor Store (Ehren-Shop). Die Umtauschraten dort sind eine Falle für Anfänger." data-en="<strong>Warning:</strong> Do not buy weapon shards in the regular Honor Store. The exchange rates there are a trap for beginners."></li>
+            </ul>
+        </div>
+
+        <div class="signature">© XLentz</div>
+    </div>
+
+    <div id="basics" class="section"><h2>02. Grundlagen</h2><div class="card"><p data-de="Inhalt folgt..." data-en="Content follows..."></p></div></div>
+    <div id="heroes" class="section"><h2>03. Helden</h2><div class="card"><p data-de="Inhalt folgt..." data-en="Content follows..."></p></div></div>
+    <div id="build" class="section"><h2>04. Gebäude</h2><div class="card"><p data-de="Inhalt folgt..." data-en="Content follows..."></p></div></div>
+    <div id="calc" class="section"><h2>17. Kalkulatoren</h2><div class="card"><p data-de="Inhalt folgt..." data-en="Content follows..."></p></div></div>
+
+</div>
+
+<nav class="bottom-nav">
+    <div class="nav-btn active" onclick="openSection('intro')">🏠<br>HOME</div>
+    <div class="nav-btn" onclick="toggleMenu()">☰<br>MENU</div>
+    <div class="nav-btn" onclick="openSection('s2')">❄️<br>S2</div>
+</nav>
+
+<script>
+    let currentLang = 'de';
+
+    window.addEventListener('DOMContentLoaded', () => {
+        updateTexts();
+        setTimeout(() => {
+            document.getElementById('boot-screen').style.opacity = '0';
+            setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; }, 500);
+        }, 1200);
+    });
+
+    function updateTexts() {
+        document.querySelectorAll('[data-de]').forEach(el => {
+            // WICHTIG: innerHTML statt innerText, damit HTML-Tags wie <strong> funktionieren!
+            const text = el.getAttribute('data-' + currentLang);
+            if (text) el.innerHTML = text; 
+        });
+    }
+
+    function toggleMenu() {
+        const m = document.getElementById('sideMenu');
+        const o = document.getElementById('overlay');
+        m.classList.toggle('open');
+        o.style.display = m.classList.contains('open') ? 'block' : 'none';
+    }
+
+    function toggleSubmenu(id, el) {
+        document.getElementById(id).classList.toggle('open');
+        el.classList.toggle('open');
+    }
+
+    function openSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(id);
+        if(target) target.classList.add('active');
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        if(id === 'intro') document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
+        if(id === 's2') document.querySelector('.nav-btn:nth-child(3)').classList.add('active');
+
+        toggleMenu();
+        window.scrollTo(0,0);
+        updateTexts();
+    }
+
+    function openAndScroll(sectionId, elementId) {
+        openSection(sectionId);
+        setTimeout(() => {
+            const el = document.getElementById(elementId);
+            if(el) {
+                const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            }
+        }, 200);
+    }
+
+    function toggleLang() {
+        currentLang = currentLang === 'de' ? 'en' : 'de';
+        document.getElementById('langBtn').innerText = currentLang.toUpperCase();
+        updateTexts();
+    }
+</script>
+
+</body>
+</html>
