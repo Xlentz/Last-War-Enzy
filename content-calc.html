@@ -1,0 +1,172 @@
+<h2 data-de="09. Strategische Kalkulatoren" data-en="09. Strategic Calculators">09. Strategische Kalkulatoren</h2>
+
+<div class="card">
+    <h3 data-de="Speedup Konverter" data-en="Speedup Converter">Speedup Konverter</h3>
+    <div class="calc-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div>
+            <label style="font-size: 0.7rem; color: var(--primary);">1m</label>
+            <input type="number" id="sp1m" class="calc-input" placeholder="0" oninput="calcSpeedups()">
+        </div>
+        <div>
+            <label style="font-size: 0.7rem; color: var(--primary);">5m</label>
+            <input type="number" id="sp5m" class="calc-input" placeholder="0" oninput="calcSpeedups()">
+        </div>
+        <div>
+            <label style="font-size: 0.7rem; color: var(--primary);">1h</label>
+            <input type="number" id="sp1h" class="calc-input" placeholder="0" oninput="calcSpeedups()">
+        </div>
+        <div>
+            <label style="font-size: 0.7rem; color: var(--primary);">8h</label>
+            <input type="number" id="sp8h" class="calc-input" placeholder="0" oninput="calcSpeedups()">
+        </div>
+    </div>
+    <div id="speedup-result" class="res-box" style="margin-top: 15px; border: 1px solid var(--primary); padding: 10px; text-align: center; color: var(--primary); font-weight: bold;">
+        Total: 0d 0h 0m
+    </div>
+</div>
+
+<div class="card" style="border: 1px solid var(--accent);">
+    <h3 data-de="S2: Kohle-Brennraten Planer" data-en="S2: Coal Burn Rate Planner">S2: Kohle-Brennraten Planer</h3>
+    <p style="font-size: 0.7rem;" data-de="Berechne, ob deine Kohle für die Nacht reicht." data-en="Check if your coal lasts through the night."></p>
+    
+    <label data-de="Ofen-Stufe (1-30)" data-en="Furnace Level (1-30)"></label>
+    <input type="number" id="furnaceLvl" class="calc-input" value="15" min="1" max="30" oninput="calcCoal()">
+    
+    <label data-de="Geplante Offline-Zeit (Stunden)" data-en="Hours Offline"></label>
+    <input type="number" id="offlineHours" class="calc-input" value="8" oninput="calcCoal()">
+    
+    <div style="margin: 10px 0;">
+        <input type="checkbox" id="overheat" onchange="calcCoal()"> <span data-de="Überhitzen (4x Verbrauch)" data-en="Overheating (4x Burn)"></span>
+    </div>
+
+    <div id="coal-result" class="res-box" style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px;">
+        <div data-de="Bedarf:" data-en="Required:"></div>
+        <div id="coal-value" style="font-size: 1.2rem; color: var(--accent);">0</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 data-de="S2: -19°C Sicherheits-Check" data-en="S2: -19°C Safety Check">S2: -19°C Sicherheits-Check</h3>
+    <div style="font-size: 0.8rem; margin-bottom: 10px;">
+        <label data-de="Zonen-Temperatur (°C)" data-en="Zone Temperature (°C)"></label>
+        <select id="zoneTemp" class="calc-input" onchange="calcTempSafe()">
+            <option value="-15">-15°C (Rand)</option>
+            <option value="-30">-30°C</option>
+            <option value="-50">-50°C (Sturm)</option>
+            <option value="-80">-80°C (Capitol)</option>
+        </select>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.75rem;">
+        <label><input type="checkbox" id="buffTower" onchange="calcTempSafe()"> Turm des Sieges (+5°C)</label>
+        <label><input type="checkbox" id="buffTech" onchange="calcTempSafe()"> Forschung 'Intensive Überlastung' (+6°C)</label>
+        <label><input type="checkbox" id="buffVillage" onchange="calcTempSafe()"> Dorf-Stationierung (+5°C)</label>
+    </div>
+
+    <div id="temp-result" style="margin-top: 15px; padding: 10px; text-align: center; font-weight: bold; border-radius: 4px;">
+        STATUS: UNKNOWN
+    </div>
+</div>
+
+<div class="card">
+    <h3 data-de="S1: Protein-Bedarf (Resistenz)" data-en="S1: Protein Requirement">S1: Protein-Bedarf (Resistenz)</h3>
+    <label data-de="Ziel-Resistenz" data-en="Target Resistance"></label>
+    <select id="targetRes" class="calc-input" onchange="calcProtein()">
+        <option value="2000">2000 (Zone 1)</option>
+        <option value="5000">5000 (Zone 2)</option>
+        <option value="6000">6000 (Capitol)</option>
+    </select>
+    <div id="protein-result" class="res-box" style="margin-top: 10px; color: var(--primary);">
+        Protein-Schätzung: --
+    </div>
+</div>
+
+<script>
+    // LOGIK FÜR SPEEDUPS
+    function calcSpeedups() {
+        const m1 = parseInt(document.getElementById('sp1m').value) || 0;
+        const m5 = parseInt(document.getElementById('sp5m').value) || 0;
+        const h1 = parseInt(document.getElementById('sp1h').value) || 0;
+        const h8 = parseInt(document.getElementById('sp8h').value) || 0;
+        
+        const totalMinutes = m1 + (m5 * 5) + (h1 * 60) + (h8 * 480);
+        
+        const d = Math.floor(totalMinutes / 1440);
+        const h = Math.floor((totalMinutes % 1440) / 60);
+        const m = totalMinutes % 60;
+        
+        document.getElementById('speedup-result').innerText = `Total: ${d}d ${h}h ${m}m`;
+    }
+
+    // LOGIK FÜR KOHLE (S2)
+    function calcCoal() {
+        const lvl = parseInt(document.getElementById('furnaceLvl').value) || 1;
+        const hours = parseInt(document.getElementById('offlineHours').value) || 0;
+        const isOverheat = document.getElementById('overheat').checked;
+        
+        // Basiskosten-Logik (Beispielwerte basierend auf Game-Daten)
+        let ratePerMin = 10 + (lvl * 5); 
+        if(isOverheat) ratePerMin *= 4;
+        
+        const totalCoal = ratePerMin * 60 * hours;
+        document.getElementById('coal-value').innerText = totalCoal.toLocaleString() + " Kohle";
+    }
+
+    // LOGIK FÜR -19°C TRICK
+    function calcTempSafe() {
+        let temp = parseInt(document.getElementById('zoneTemp').value);
+        if(document.getElementById('buffTower').checked) temp += 5;
+        if(document.getElementById('buffTech').checked) temp += 6;
+        if(document.getElementById('buffVillage').checked) temp += 5;
+        
+        const res = document.getElementById('temp-result');
+        res.innerText = `END-TEMP: ${temp}°C`;
+        
+        if(temp >= -19) {
+            res.style.background = "rgba(74, 222, 128, 0.2)";
+            res.style.color = "var(--primary)";
+            res.innerText += " - SICHER (SAFE)";
+        } else {
+            res.style.background = "rgba(239, 68, 68, 0.2)";
+            res.style.color = "var(--danger)";
+            res.innerText += " - GEFAHR: EINFRIEREN!";
+        }
+    }
+
+    // LOGIK FÜR PROTEIN (S1)
+    function calcProtein() {
+        const target = document.getElementById('targetRes').value;
+        let protein = "0";
+        if(target == "2000") protein = "~1.5M";
+        if(target == "5000") protein = "~4.8M";
+        if(target == "6000") protein = "~8.2M";
+        document.getElementById('protein-result').innerText = "Protein-Bedarf: " + protein;
+    }
+
+    // Initialisierung
+    calcSpeedups();
+    calcCoal();
+    calcTempSafe();
+    calcProtein();
+</script>
+
+<style>
+    .calc-input {
+        width: 100%;
+        background: #0d0f11;
+        border: 1px solid var(--dim);
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        font-family: monospace;
+    }
+    .res-box {
+        background: #0a0c0e;
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
