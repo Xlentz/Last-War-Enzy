@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <!--
+        FIX #9: user-scalable=no entfernt (Barrierefreiheit / Accessibility)
+        FIX #12: theme-color für iOS-Statusleiste hinzugefügt
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0c0e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+```
+<!-- FIX #10: manifest.json verlinkt (Datei muss im selben Ordner liegen) -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<title>Last War Enzy – Tactical Interface v2</title>
+
+<style>
+    /* ============================================================
+       DESIGN TOKENS
+       ============================================================ */
+    :root {
+        --bg-dark:       #0a0c0e;
+        --bg-panel:      #161b22;
+        --bg-card:       #0f1318;
+        --primary:       #4ade80;
+        --accent:        #fbbf24;
+        --text:          #e2e8f0;
+        --dim:           #64748b;
+        --danger:        #ef4444;
+        --terminal-green:#00ff41;
+        --border-subtle: #21262d;
+        --border-strong: #30363d;
+    }
+
+    /* ============================================================
+       BASE
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+        font-family: 'Courier New', Courier, monospace;
+        background-color: var(--bg-dark);
+        color: var(--text);
+        margin: 0;
+        padding-bottom: 80px;
+        overflow-x: hidden;
+        line-height: 1.5;
+    }
+
+    /* ============================================================
+       BOOT SCREEN
+       ============================================================ */
+    #boot-screen {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: #000; z-index: 9999;
+        display: flex; flex-direction: column;
+        justify-content: center; align-items: center;
+        color: var(--terminal-green); font-size: 0.8rem;
+    }
+    #boot-screen.hidden { display: none; }
+
+    /* ============================================================
+       STATUS BAR
+       ============================================================ */
+    .status-bar {
+        background: #000;
+        border-bottom: 1px solid var(--primary);
+        padding: 5px 15px;
+        display: flex; justify-content: space-between;
+        font-size: 0.7rem; color: var(--primary);
+        text-transform: uppercase;
+    }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    header {
+        background: var(--bg-panel);
+        padding: 12px 15px;
+        border-bottom: 2px solid var(--primary);
+        position: sticky; top: 0; z-index: 100;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+        color: var(--primary);
+        font-weight: bold; font-size: 1.1rem; letter-spacing: 2px;
+    }
+
+    /* ============================================================
+       BUTTONS
+       ============================================================ */
+    .btn {
+        background: none;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 6px 12px; cursor: pointer;
+        text-transform: uppercase; font-size: 0.75rem;
+        border-radius: 2px;
+        font-family: inherit;
+        transition: background 0.15s, color 0.15s;
+    }
+    .btn:hover {
+        background: var(--primary);
+        color: #000;
+    }
+
+    /* ============================================================
+       SIDE MENU
+       ============================================================ */
+    #sideMenu {
+        position: fixed; top: 0; left: -300px;
+        width: 300px; height: 100%;
+        background: var(--bg-panel);
+        border-right: 2px solid var(--primary);
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000; overflow-y: auto;
+    }
+    #sideMenu.open { left: 0; }
+
+    .menu-header {
+        padding: 20px;
+        color: var(--primary); font-size: 0.7rem;
+        border-bottom: 1px solid var(--primary);
+        background: #000;
+    }
+
+    .menu-item {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border-subtle);
+        cursor: pointer;
+        display: flex; justify-content: space-between; align-items: center;
+        color: var(--text); text-decoration: none; font-size: 0.9rem;
+        transition: background 0.15s, color 0.15s, border-left 0.15s;
+        border-left: 4px solid transparent;
+    }
+    .menu-item:hover,
+    .menu-item.active {
+        background: #1f242c;
+        color: var(--primary);
+        border-left-color: var(--primary);
+    }
+
+    /* FIX #6: Chevron als eigenes Element → kein fragiles string.replace() mehr */
+    .menu-item .chevron {
+        font-size: 0.75rem;
+        transition: transform 0.2s;
+        flex-shrink: 0;
+        margin-left: 8px;
+    }
+    .menu-item.submenu-open .chevron {
+        transform: rotate(180deg);
+    }
+
+    .submenu { display: none; background: #0d1117; }
+    .submenu.open { display: block; }
+    .submenu .menu-item {
+        padding-left: 40px; font-size: 0.85rem;
+        border-left: 1px solid var(--dim);
+    }
+
+    #overlay {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: none; z-index: 999;
+        backdrop-filter: blur(2px);
+    }
+
+    /* ============================================================
+       MAIN CONTENT AREA
+       ============================================================ */
+    #content {
+        padding: 15px;
+        max-width: 800px; margin: 0 auto;
+        animation: scanline 0.4s ease-out;
+    }
+
+    @keyframes scanline {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* FIX #2: Alle in Content-Dateien verwendeten Klassen zentral definiert
+       ============================================================
+       CARD COMPONENT  (war komplett fehlend)
+       ============================================================ */
+    .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-strong);
+        border-left: 4px solid var(--primary);
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Variante: Warnung / Highlight */
+    .card.alert {
+        border-left-color: var(--accent);
+        background: rgba(251, 191, 36, 0.04);
+    }
+    .card.alert h3 { color: var(--accent); }
+
+    .card h3 {
+        color: var(--primary);
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 0 12px 0;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border-strong);
+    }
+    .card h4 {
+        color: var(--accent);
+        font-size: 0.85rem;
+        margin: 12px 0 6px 0;
+    }
+    .card p {
+        font-size: 0.85rem;
+        color: var(--text);
+        margin: 0 0 10px 0;
+    }
+    .card ul, .card ol {
+        padding-left: 20px;
+        margin: 8px 0;
+        font-size: 0.85rem;
+    }
+    .card li { margin-bottom: 5px; line-height: 1.5; }
+    .card strong { color: var(--text); }
+    .card em { color: var(--dim); }
+
+    /* Tabellen */
+    .card table {
+        width: 100%; border-collapse: collapse;
+        font-size: 0.8rem; margin: 10px 0;
+    }
+    .card table th {
+        background: rgba(74, 222, 128, 0.08);
+        color: var(--primary);
+        padding: 7px 10px; text-align: left;
+        border-bottom: 1px solid var(--primary);
+        font-weight: normal; letter-spacing: 0.5px;
+    }
+    .card table td {
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--border-subtle);
+        color: var(--dim);
+    }
+    .card table tr:last-child td { border-bottom: none; }
+
+    /* Inline-Alert (p.alert wie in content-s2.html) */
+    p.alert {
+        background: rgba(251, 191, 36, 0.08);
+        border-left: 3px solid var(--accent);
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        color: var(--text);
+        border-radius: 0 4px 4px 0;
+        margin: 10px 0;
+    }
+
+    /* Content-Seitenüberschrift (h2 in content-*.html) */
+    #content > h2,
+    #content h2:first-child {
+        color: var(--primary);
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 10px;
+        margin: 0 0 20px 0;
+    }
+
+    /* ============================================================
+       SIGNATURE  (war komplett fehlend)
+       ============================================================ */
+    .signature {
+        text-align: right;
+        font-size: 0.65rem;
+        color: var(--dim);
+        opacity: 0.45;
+        margin-top: 20px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    /* ============================================================
+       FIX #13: Kalkulator-Styles zentral (vorher nur in content-calc.html)
+       ============================================================ */
+    .calc-input {
+        width: 100%;
+        background: #0d0f11;
+        border: 1px solid var(--dim);
+        color: #fff;
+        padding: 8px;
+        border-radius: 4px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.85rem;
+        transition: border-color 0.15s;
+    }
+    .calc-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.15);
+    }
+
+    .res-box {
+        background: #0a0c0e;
+        padding: 10px; border-radius: 4px;
+        text-align: center; font-weight: bold;
+    }
+
+    /* WIP-Badge im Menü */
+    .wip-badge {
+        display: inline-block;
+        font-size: 0.55rem;
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 2px;
+        padding: 1px 4px;
+        vertical-align: middle;
+        margin-left: 4px;
+        letter-spacing: 0.5px;
+    }
+
+    /* ============================================================
+       LOADING INDICATOR (neu – für Content-Fetch)
+       ============================================================ */
+    #loading-indicator {
+        display: none;
+        position: fixed; bottom: 20px; right: 20px;
+        background: var(--bg-panel);
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 6px 14px;
+        font-size: 0.7rem; border-radius: 4px;
+        z-index: 500;
+        animation: pulse 1s ease-in-out infinite alternate;
+    }
+    @keyframes pulse {
+        from { opacity: 0.6; }
+        to   { opacity: 1; }
+    }
+</style>
+```
+
+</head>
+<body>
+
+<!-- BOOT SCREEN -->
+
+<div id="boot-screen">
+    <div id="boot-text">TACTICAL_OS_v2.5_LOADING...</div>
+    <div style="width: 200px; height: 2px; background: #1a1a1a; margin-top: 12px; border-radius: 1px;">
+        <div id="boot-progress" style="width: 0%; height: 100%; background: var(--primary); transition: width 0.1s linear;"></div>
+    </div>
+</div>
+
+<!-- LOADING INDICATOR -->
+
+<div id="loading-indicator">[ LOADING... ]</div>
+
+<!-- STATUS BAR -->
+
+<div class="status-bar">
+    <span>ENC_VERSION: 2.5.1</span>
+    <span>STATUS: ONLINE</span>
+    <span>REGION: EU_WEST</span>
+</div>
+
+<!-- HEADER -->
+
+<header>
+    <button class="btn" id="menuBtn" aria-label="Menü öffnen">[ MENU ]</button>
+    <div class="logo">LAST WAR ENZY</div>
+    <button class="btn" id="langBtn" aria-label="Sprache wechseln">DE</button>
+</header>
+
+<!-- OVERLAY -->
+
+<div id="overlay"></div>
+
+<!-- SIDE MENU -->
+
+<nav id="sideMenu" aria-label="Hauptnavigation">
+    <div class="menu-header">TACTICAL_DATABASE_v2.5 &nbsp;|&nbsp; 18 CHAPTERS</div>
+
+```
+<!-- ═══════════════════════════════════════════════
+     01  HOME
+═══════════════════════════════════════════════ -->
+<a class="menu-item" id="nav-home" data-module="home">
+    <span>01. Home / Status</span>
+</a>
+
+<!-- ═══════════════════════════════════════════════
+     02  EINFÜHRUNG
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subIntro">
+    <span>02. Einführung</span><span class="chevron">▼</span>
+</div>
+<div id="subIntro" class="submenu">
+    <a class="menu-item" data-module="intro" data-scroll="overview">02.1 Spielübersicht &amp; Story</a>
+    <a class="menu-item" data-module="intro" data-scroll="history">02.2 Versions- &amp; Season-Historie</a>
+    <a class="menu-item" data-module="intro" data-scroll="howto">02.3 App optimal nutzen</a>
+    <a class="menu-item" data-module="intro" data-scroll="glossar">02.4 Glossar &amp; Begriffe</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     03  GRUNDLAGEN
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subBasics">
+    <span>03. Grundlagen</span><span class="chevron">▼</span>
+</div>
+<div id="subBasics" class="submenu">
+    <a class="menu-item" data-module="basics" data-scroll="resources">03.1 Ressourcen-System</a>
+    <a class="menu-item" data-module="basics" data-scroll="troops">03.2 Truppentypen</a>
+    <a class="menu-item" data-module="basics" data-scroll="hq">03.3 HQ-Upgrades &amp; Prioritäten</a>
+    <a class="menu-item" data-module="tech">03.4 Forschung (Tech-Tree)</a>
+    <a class="menu-item" data-module="basics" data-scroll="survivors">03.5 Überlebende / Survivors</a>
+    <a class="menu-item" data-module="basics" data-scroll="daily">03.6 Daily Tasks &amp; VIP</a>
+    <a class="menu-item" data-module="drone">03.7 Drohnen &amp; Komponenten</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     04  HELDEN
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subHeroes">
+    <span>04. Helden &amp; Squad-Meta</span><span class="chevron">▼</span>
+</div>
+<div id="subHeroes" class="submenu">
+    <a class="menu-item" data-module="heroes" data-scroll="list">04.1 Helden-Liste</a>
+    <a class="menu-item" data-module="heroes" data-scroll="skills">04.2 Skills &amp; Awakening</a>
+    <a class="menu-item" data-module="heroes" data-scroll="tierlist">04.3 Tier-Lists</a>
+    <a class="menu-item" data-module="heroes" data-scroll="builds">04.4 Builds &amp; Synergien</a>
+    <a class="menu-item" data-module="calc" data-scroll="hero-calc">04.5 → Shard-Kalkulator</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     05  GEBÄUDE
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subBuild">
+    <span>05. Gebäude &amp; Bau</span><span class="chevron">▼</span>
+</div>
+<div id="subBuild" class="submenu">
+    <a class="menu-item" data-module="build" data-scroll="all-buildings">05.1 Alle Gebäude</a>
+    <a class="menu-item" data-module="build" data-scroll="season-buildings">05.2 Saison-Gebäude</a>
+    <a class="menu-item" data-module="build" data-scroll="priority">05.3 Bau-Reihenfolge</a>
+    <a class="menu-item" data-module="calc" data-scroll="resource-calc">05.4 → HQ-Kalkulator</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     06  ALLIANZ
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subAlliance">
+    <span>06. Allianz &amp; Kooperation</span><span class="chevron">▼</span>
+</div>
+<div id="subAlliance" class="submenu">
+    <a class="menu-item" data-module="alliance" data-scroll="join">06.1 Beitritt &amp; Rollen</a>
+    <a class="menu-item" data-module="alliance" data-scroll="tech">06.2 Alliance Tech</a>
+    <a class="menu-item" data-module="alliance" data-scroll="hive">06.3 Hive-Layout &amp; Planung</a>
+    <a class="menu-item" data-module="alliance" data-scroll="events">06.4 Events &amp; Kriegsregeln</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     07  KAMPF
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subCombat">
+    <span>07. Kampf &amp; Mechaniken</span><span class="chevron">▼</span>
+</div>
+<div id="subCombat" class="submenu">
+    <a class="menu-item" data-module="combat" data-scroll="counter">07.1 Konter-System</a>
+    <a class="menu-item" data-module="combat" data-scroll="formations">07.2 Formationen &amp; Buffs</a>
+    <a class="menu-item" data-module="combat" data-scroll="pve">07.3 PvE (Zombies, Strongholds)</a>
+    <a class="menu-item" data-module="combat" data-scroll="pvp">07.4 PvP &amp; Verteidigung</a>
+    <a class="menu-item" data-module="combat" data-scroll="season-combat">07.5 Season-Mechaniken</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     08  TIPPS & TRICKS
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subTips">
+    <span>08. Tipps &amp; Tricks</span><span class="chevron">▼</span>
+</div>
+<div id="subTips" class="submenu">
+    <a class="menu-item" data-module="tips" data-scroll="f2p">08.1 F2P- vs. Spender-Strategien</a>
+    <a class="menu-item" data-module="tips" data-scroll="resources">08.2 Ressourcen-Management</a>
+    <a class="menu-item" data-module="tips" data-scroll="mistakes">08.3 Häufige Fehler</a>
+    <a class="menu-item" data-module="tips" data-scroll="advanced">08.4 Fortgeschrittene Techniken</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     09  EVENTS
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subEvents">
+    <span>09. Events &amp; Kalender</span><span class="chevron">▼</span>
+</div>
+<div id="subEvents" class="submenu">
+    <a class="menu-item" data-module="events" data-scroll="recurring">09.1 Wiederkehrende Events</a>
+    <a class="menu-item" data-module="events" data-scroll="seasonal">09.2 Saisonale Events</a>
+    <a class="menu-item" data-module="events" data-scroll="guides">09.3 Event-Guides &amp; Belohnungen</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     10  SHOPS
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subShops">
+    <span>10. Shops &amp; Packs</span><span class="chevron">▼</span>
+</div>
+<div id="subShops" class="submenu">
+    <a class="menu-item" data-module="shops" data-scroll="ingame">10.1 In-Game Shops</a>
+    <a class="menu-item" data-module="shops" data-scroll="season-store">10.2 Season Store &amp; Black Market</a>
+    <a class="menu-item" data-module="shops" data-scroll="value">10.3 Wert-für-Geld-Analyse</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     11–16  SEASONS
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subS1">
+    <span>11. Season 1: Blutplage</span><span class="chevron">▼</span>
+</div>
+<div id="subS1" class="submenu">
+    <a class="menu-item" data-module="s1" data-scroll="intro">11.1 Map &amp; Überblick</a>
+    <a class="menu-item" data-module="s1" data-scroll="mechanics">11.2 Mechaniken &amp; Ressourcen</a>
+    <a class="menu-item" data-module="s1" data-scroll="exclusive">11.3 Exklusive Items &amp; Helden</a>
+    <a class="menu-item" data-module="s1" data-scroll="strategy">11.4 Events &amp; Strategien</a>
+    <a class="menu-item" data-module="s1" data-scroll="alliance">11.5 Allianz &amp; Hive-Tipps</a>
+    <a class="menu-item" data-module="s1" data-scroll="end">11.6 Saison-Finale: Kapitol</a>
+</div>
+
+<div class="menu-item" data-submenu="subS2">
+    <span>12. Season 2: Polarsturm</span><span class="chevron">▼</span>
+</div>
+<div id="subS2" class="submenu">
+    <a class="menu-item" data-module="s2" data-scroll="intro">12.1 Map &amp; Überblick</a>
+    <a class="menu-item" data-module="s2" data-scroll="mechanics">12.2 Mechaniken &amp; Ressourcen</a>
+    <a class="menu-item" data-module="s2" data-scroll="exclusive">12.3 Helden, Waffen &amp; Bau</a>
+    <a class="menu-item" data-module="s2" data-scroll="strategy">12.4 Events &amp; Bosse</a>
+    <a class="menu-item" data-module="s2" data-scroll="alliance">12.5 Allianz &amp; Hive-Tipps</a>
+    <a class="menu-item" data-module="s2" data-scroll="end">12.6 Abschluss &amp; Übergang</a>
+</div>
+
+<div class="menu-item" data-submenu="subS3">
+    <span>13. Season 3: Goldenes Reich <span class="wip-badge">WIP</span></span><span class="chevron">▼</span>
+</div>
+<div id="subS3" class="submenu">
+    <a class="menu-item" data-module="s3" data-scroll="intro">13.1 Map &amp; Überblick</a>
+    <a class="menu-item" data-module="s3" data-scroll="mechanics">13.2 Mechaniken &amp; Ressourcen</a>
+    <a class="menu-item" data-module="s3" data-scroll="exclusive">13.3 Exklusive Items</a>
+    <a class="menu-item" data-module="s3" data-scroll="strategy">13.4 Strategien</a>
+    <a class="menu-item" data-module="s3" data-scroll="alliance">13.5 Allianz-Tipps</a>
+    <a class="menu-item" data-module="s3" data-scroll="end">13.6 Saison-Finale</a>
+</div>
+
+<div class="menu-item" data-submenu="subS4">
+    <span>14. Season 4: Insel der Nacht <span class="wip-badge">WIP</span></span><span class="chevron">▼</span>
+</div>
+<div id="subS4" class="submenu">
+    <a class="menu-item" data-module="s4" data-scroll="intro">14.1 Map &amp; Überblick</a>
+    <a class="menu-item" data-module="s4" data-scroll="mechanics">14.2 Mechaniken &amp; Ressourcen</a>
+    <a class="menu-item" data-module="s4" data-scroll="exclusive">14.3 Exklusive Items</a>
+    <a class="menu-item" data-module="s4" data-scroll="strategy">14.4 Strategien</a>
+    <a class="menu-item" data-module="s4" data-scroll="alliance">14.5 Allianz-Tipps</a>
+    <a class="menu-item" data-module="s4" data-scroll="end">14.6 Saison-Finale</a>
+</div>
+
+<div class="menu-item" data-submenu="subS5">
+    <span>15. Season 5: Wilder Westen <span class="wip-badge">WIP</span></span><span class="chevron">▼</span>
+</div>
+<div id="subS5" class="submenu">
+    <a class="menu-item" data-module="s5" data-scroll="intro">15.1 Map &amp; Überblick</a>
+    <a class="menu-item" data-module="s5" data-scroll="mechanics">15.2 Mechaniken &amp; Ressourcen</a>
+    <a class="menu-item" data-module="s5" data-scroll="exclusive">15.3 Exklusive Items</a>
+    <a class="menu-item" data-module="s5" data-scroll="strategy">15.4 Strategien</a>
+    <a class="menu-item" data-module="s5" data-scroll="alliance">15.5 Allianz-Tipps</a>
+    <a class="menu-item" data-module="s5" data-scroll="end">15.6 Saison-Finale</a>
+</div>
+
+<div class="menu-item" data-submenu="subS6">
+    <span>16. Season 6: Schattenregenwald <span class="wip-badge">WIP</span></span><span class="chevron">▼</span>
+</div>
+<div id="subS6" class="submenu">
+    <a class="menu-item" data-module="s6" data-scroll="intro">16.1 Map &amp; Überblick</a>
+    <a class="menu-item" data-module="s6" data-scroll="mechanics">16.2 Mechaniken &amp; Ressourcen</a>
+    <a class="menu-item" data-module="s6" data-scroll="exclusive">16.3 Exklusive Items</a>
+    <a class="menu-item" data-module="s6" data-scroll="strategy">16.4 Strategien</a>
+    <a class="menu-item" data-module="s6" data-scroll="alliance">16.5 Allianz-Tipps</a>
+    <a class="menu-item" data-module="s6" data-scroll="end">16.6 Saison-Finale</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     17  NEBENSAISON
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subOffseason">
+    <span>17. Nebensaison (Off-Season) <span class="wip-badge">WIP</span></span><span class="chevron">▼</span>
+</div>
+<div id="subOffseason" class="submenu">
+    <a class="menu-item" data-module="offseason" data-scroll="mechanics">17.1 Mechaniken</a>
+    <a class="menu-item" data-module="offseason" data-scroll="preparation">17.2 Vorbereitung &amp; Tipps</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     18  KALKULATOREN
+═══════════════════════════════════════════════ -->
+<div class="menu-item" data-submenu="subCalc" style="color: var(--accent);">
+    <span style="color: var(--accent); font-weight: bold;">18. ⚙ KALKULATOREN</span>
+    <span class="chevron" style="color: var(--accent);">▼</span>
+</div>
+<div id="subCalc" class="submenu">
+    <a class="menu-item" data-module="calc" data-scroll="resource-calc">18.1 Resource / HQ Kalkulator</a>
+    <a class="menu-item" data-module="calc" data-scroll="hero-calc">18.2 Helden / Splitter / EXP</a>
+    <a class="menu-item" data-module="calc" data-scroll="troop-calc">18.3 Truppen-Training</a>
+    <a class="menu-item" data-module="calc" data-scroll="research-calc">18.4 Forschung &amp; Special Forces</a>
+    <a class="menu-item" data-module="calc" data-scroll="gear-calc">18.5 Gear / Drohne / Waffe</a>
+    <a class="menu-item" data-module="calc" data-scroll="event-calc">18.6 Event-Planer</a>
+    <a class="menu-item" data-module="calc" data-scroll="tracker">18.7 Progress Tracker</a>
+    <a class="menu-item" data-module="calc" data-scroll="timeline">18.8 Timeline-Planer</a>
+</div>
+```
+
+</nav>
+
+<!-- MAIN CONTENT -->
+
+<main id="content" aria-live="polite"></main>
+
+<script>
+    /* ==============================================================
+       KONFIGURATION & ZUSTAND
+       ============================================================== */
+    let currentLang   = 'de';
+    let currentModule = null;
+
+    /**
+     * FIX #8: Übersetzungen für System-Meldungen (war immer Deutsch)
+     */
+    const i18n = {
+        de: {
+            fileNotFound:  (n) => `Die Datei "content-${n}.html" konnte nicht geladen werden.`,
+            errorTitle:    '[FEHLER: DATEI_FEHLT]',
+            wipTitle:      'In Entwicklung',
+            wipText:       (n) => `Das Kapitel <strong>${n}</strong> wird gerade erstellt.<br>Erstelle die Datei <code>content-${n}.html</code> im selben Ordner, um diesen Bereich zu aktivieren.`,
+            loading:       'LADE...',
+        },
+        en: {
+            fileNotFound:  (n) => `The file "content-${n}.html" could not be loaded.`,
+            errorTitle:    '[ERROR: FILE_MISSING]',
+            wipTitle:      'Under Construction',
+            wipText:       (n) => `Chapter <strong>${n}</strong> is currently being written.<br>Create the file <code>content-${n}.html</code> in the same folder to activate this section.`,
+            loading:       'LOADING...',
+        },
+    };
+
+    /**
+     * Module, für die noch keine content-*.html Datei existiert.
+     * Diese zeigen einen "In Entwicklung"-Platzhalter statt einer Fehlermeldung.
+     * → Eintrag hier entfernen, sobald die Datei erstellt wurde.
+     */
+    const WIP_MODULES = new Set([
+        'intro',
+        'tips',
+        'shops',
+        's3', 's4', 's5', 's6',
+        'offseason',
+    ]);
+
+    /* ==============================================================
+       FIX #3: CONTENT-CACHE (verhindert wiederholte fetch()-Aufrufe)
+       ============================================================== */
+    const contentCache = new Map();
+
+    /* ==============================================================
+       CONTENT LADEN
+       ============================================================== */
+    async function loadContent(moduleName) {
+        if (currentModule === moduleName && contentCache.has(moduleName)) {
+            // Seite bereits aktiv – nur Menü schließen
+            toggleMenu(false);
+            return;
+        }
+
+        // WIP-Platzhalter anzeigen (kein fetch nötig)
+        if (WIP_MODULES.has(moduleName)) {
+            const t = i18n[currentLang];
+            const label = document.querySelector(
+                `#sideMenu [data-module="${moduleName}"][data-submenu], #sideMenu [data-submenu] + .submenu [data-module="${moduleName}"]`
+            )?.textContent?.trim() || moduleName.toUpperCase();
+            document.getElementById('content').innerHTML = `
+                <div class="card" style="border-left-color: var(--accent); margin-top:10px;">
+                    <h3 style="color:var(--accent);">[ ${t.wipTitle.toUpperCase()} ]</h3>
+                    <p style="font-size:0.85rem;">${t.wipText(moduleName)}</p>
+                    <p style="font-size:0.75rem; color:var(--dim); margin-top:10px;">
+                        © XLentz – Last War Enzy
+                    </p>
+                </div>`;
+            updateNavState(moduleName);
+            currentModule = moduleName;
+            toggleMenu(false);
+            window.scrollTo(0, 0);
+            return;
+        }
+
+        showLoader(true);
+
+        try {
+            let html;
+
+            if (contentCache.has(moduleName)) {
+                // FIX #3: Aus Cache lesen, kein neues fetch()
+                html = contentCache.get(moduleName);
+            } else {
+                const response = await fetch(`content-${moduleName}.html`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                html = await response.text();
+                contentCache.set(moduleName, html);
+            }
+
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = html;
+
+            /*
+             * Script-Ausführung für Kalkulator-Seiten.
+             * HINWEIS: Funktionen aus Content-Scripts landen im globalen Scope.
+             * Solange Modul-Funktionsnamen eindeutig sind (z.B. calcCoal nur
+             * in content-calc.html), ist das unkritisch. Bei wachsendem Projekt
+             * empfiehlt sich ein Namespace-Objekt: window.LWE = window.LWE || {}
+             */
+            contentDiv.querySelectorAll('script').forEach(oldScript => {
+                const newScript = document.createElement('script');
+                newScript.text = oldScript.text;
+                document.body.appendChild(newScript);
+                document.body.removeChild(newScript);
+            });
+
+            /*
+             * FIX #13: Inline-<style> aus Content-Fragmenten entfernen,
+             * da alle Styles jetzt zentral in index.html definiert sind.
+             * (content-calc.html enthielt einen duplizierten <style>-Block)
+             */
+            contentDiv.querySelectorAll('style').forEach(s => s.remove());
+
+            updateLanguage();
+            updateNavState(moduleName);
+            currentModule = moduleName;
+            toggleMenu(false);
+            window.scrollTo(0, 0);
+
+        } catch (error) {
+            console.error('[LWE] Content load error:', error);
+            const t = i18n[currentLang];
+            document.getElementById('content').innerHTML = `
+                <div style="padding:20px; border:1px solid var(--danger);
+                            background:rgba(239,68,68,0.08); border-radius:4px;">
+                    <h3 style="color:var(--danger); margin-top:0;">${t.errorTitle}</h3>
+                    <p style="font-size:0.85rem;">${t.fileNotFound(moduleName)}</p>
+                </div>`;
+        } finally {
+            showLoader(false);
+        }
+    }
+
+    /* ==============================================================
+       FIX #5: LOAD & SCROLL – kein hartes setTimeout(400) mehr.
+       requestAnimationFrame wartet auf den nächsten Paint-Zyklus.
+       Scroll wird nur ausgeführt, wenn das Element tatsächlich existiert.
+       ============================================================== */
+    async function loadAndScroll(moduleName, elementId) {
+        await loadContent(moduleName);
+        if (!elementId) return;
+        requestAnimationFrame(() => {
+            const el = document.getElementById(elementId);
+            if (el) {
+                const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        });
+    }
+
+    /* ==============================================================
+       NAVIGATIONS-STATE AKTUALISIEREN
+       Markiert das aktive Menüelement und öffnet automatisch
+       das zugehörige Untermenü.
+       ============================================================== */
+    function updateNavState(moduleName) {
+        // Alle aktiven Markierungen zurücksetzen
+        document.querySelectorAll('#sideMenu .menu-item').forEach(el =>
+            el.classList.remove('active')
+        );
+
+        // 1. Versuche über id="nav-{module}" (Rückwärtskompatibilität)
+        const byId = document.getElementById('nav-' + moduleName);
+        if (byId) {
+            byId.classList.add('active');
+            return;
+        }
+
+        // 2. Finde alle Einträge mit data-module-Übereinstimmung im Menü
+        //    Bevorzuge Einträge ohne data-scroll (Top-Level-Links)
+        const candidates = document.querySelectorAll(
+            `#sideMenu .menu-item[data-module="${moduleName}"]`
+        );
+        if (candidates.length === 0) return;
+
+        // Ersten Treffer ohne data-scroll bevorzugen, sonst ersten nehmen
+        const target = [...candidates].find(el => !el.getAttribute('data-scroll'))
+            || candidates[0];
+
+        target.classList.add('active');
+
+        // Übergeordnetes Submenu automatisch öffnen
+        const parentSubmenu = target.closest('.submenu');
+        if (parentSubmenu && !parentSubmenu.classList.contains('open')) {
+            parentSubmenu.classList.add('open');
+            // Auch den Trigger-Button als geöffnet markieren
+            const triggerId = parentSubmenu.id;
+            const trigger   = document.querySelector(`[data-submenu="${triggerId}"]`);
+            if (trigger) trigger.classList.add('submenu-open');
+        }
+    }
+
+    /* ==============================================================
+       MENÜ & OVERLAY
+       ============================================================== */
+    function toggleMenu(forceOpen) {
+        const menu    = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+        const isOpen  = forceOpen !== undefined
+            ? forceOpen
+            : !menu.classList.contains('open');
+
+        menu.classList.toggle('open', isOpen);
+        overlay.style.display = isOpen ? 'block' : 'none';
+        document.getElementById('menuBtn').setAttribute(
+            'aria-expanded', String(isOpen)
+        );
+    }
+
+    /* ==============================================================
+       FIX #6: SUBMENU-TOGGLE – Chevron als CSS-Transform,
+       kein fragiles string.replace() mehr
+       ============================================================== */
+    function toggleSubmenu(triggerEl) {
+        const subId  = triggerEl.getAttribute('data-submenu');
+        const sub    = document.getElementById(subId);
+        if (!sub) return;
+        const isOpen = sub.classList.toggle('open');
+        triggerEl.classList.toggle('submenu-open', isOpen);
+    }
+
+    /* ==============================================================
+       FIX #1: SPRACHE – innerHTML statt innerText
+       (Verhindert, dass <strong>, <em> etc. als Klartext erscheinen)
+       ============================================================== */
+    function toggleLang() {
+        currentLang = currentLang === 'de' ? 'en' : 'de';
+        document.getElementById('langBtn').textContent = currentLang.toUpperCase();
+        document.documentElement.lang = currentLang;
+        updateLanguage();
+    }
+
+    function updateLanguage() {
+        document.querySelectorAll('[data-de]').forEach(el => {
+            const val = el.getAttribute(`data-${currentLang}`);
+            if (val !== null) el.innerHTML = val;   // FIX #1: innerHTML!
+        });
+    }
+
+    /* ==============================================================
+       LOADING INDICATOR
+       ============================================================== */
+    function showLoader(visible) {
+        document.getElementById('loading-indicator').style.display =
+            visible ? 'block' : 'none';
+    }
+
+    /* ==============================================================
+       FIX #4: BOOT-ANIMATION – zuverlässiger Abschluss garantiert
+       ============================================================== */
+    function startBoot() {
+        let prog = 0;
+        const bar = document.getElementById('boot-progress');
+
+        const interval = setInterval(() => {
+            // Asymptotische Annäherung: schnell am Anfang, langsam am Ende
+            prog += (100 - prog) * 0.18 + Math.random() * 3;
+            bar.style.width = Math.min(prog, 90) + '%';
+        }, 80);
+
+        // Nach spätestens 1.2s abschließen – unabhängig vom Random-Verlauf
+        setTimeout(() => {
+            clearInterval(interval);
+            bar.style.width = '100%';
+            setTimeout(() => {
+                document.getElementById('boot-screen').classList.add('hidden');
+                loadContent('home');
+            }, 300);
+        }, 1200);
+    }
+
+    /* ==============================================================
+       EVENT LISTENER SETUP
+       (Ersetzt onclick="" Inline-Handler wo möglich,
+       Delegation für dynamisch geladene Menü-Items)
+       ============================================================== */
+    function initEventListeners() {
+        // Header-Buttons
+        document.getElementById('menuBtn').addEventListener('click', () =>
+            toggleMenu()
+        );
+        document.getElementById('langBtn').addEventListener('click', toggleLang);
+        document.getElementById('overlay').addEventListener('click', () =>
+            toggleMenu(false)
+        );
+
+        // Navigations-Delegation für das Side-Menu
+        document.getElementById('sideMenu').addEventListener('click', (e) => {
+            const item = e.target.closest('.menu-item');
+            if (!item) return;
+
+            const submenuId = item.getAttribute('data-submenu');
+            const module    = item.getAttribute('data-module');
+            const scroll    = item.getAttribute('data-scroll');  // null wenn nicht gesetzt
+
+            if (submenuId) {
+                // Submenu-Trigger aufklappen / zuklappen
+                toggleSubmenu(item);
+            } else if (module) {
+                // Content-Link: mit Scroll-Ziel (falls vorhanden) oder ohne
+                if (scroll) {
+                    loadAndScroll(module, scroll);
+                } else {
+                    loadContent(module);
+                }
+            }
+        });
+    }
+
+    /* ==============================================================
+       FIX #11 / #7: SERVICE WORKER REGISTRIERUNG
+       Ermöglicht Offline-Nutzung (sw.js muss im Root liegen)
+       ============================================================== */
+    function registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg  => console.log('[LWE] SW registered:', reg.scope))
+                .catch(err => console.warn('[LWE] SW registration failed:', err));
+        }
+    }
+
+    /* ==============================================================
+       FIX #7: DOMContentLoaded statt window.onload
+       (Schnellerer Start – wartet nicht auf Bilder/Ressourcen)
+       ============================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+        initEventListeners();
+        registerServiceWorker();
+        startBoot();
+    });
+</script>
+
+</body>
+</html>
