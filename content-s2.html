@@ -1,0 +1,409 @@
+<!-- ═══════════════════════════════════════════════════════
+     SEASON 2: POLARSTURM | Last War Enzy – by XLentz
+     Quellen: lastwartutorial.com, lastwarhandbook.com,
+     theriagames.com, Community-Guides (Reddit/ULG), Bilder-Material
+     ═══════════════════════════════════════════════════════ -->
+
+<h2 data-de="12. Season 2: Polarsturm (Polar Storm)" data-en="12. Season 2: Polar Storm">12. Season 2: Polarsturm (Polar Storm)</h2>
+
+<!-- ──────────────────────────────────────────────────────
+     12.1  MAP & ÜBERBLICK
+────────────────────────────────────────────────────── -->
+
+<div class="card" id="intro">
+    <h3 data-de="12.1 Map & Überblick" data-en="12.1 Map & Overview">12.1 Map & Überblick</h3>
+
+```
+<p data-de="Kaiser Boreas hat das einst blühende Industriegebiet der Polaren Region in eine ewige Eiswüste verwandelt – alle Wärmequellen wurden abgeschaltet. In Saison 2 (48 Tage) kämpfst du gemeinsam mit deiner Allianz darum, die Städte zurückzuerobern, Wärme zu erzeugen und so viel <strong>Seltene Erde (Rare Soil)</strong> wie möglich zu akkumulieren."
+   data-en="Emperor Boreas has turned the once-thriving industrial polar region into an eternal ice wasteland — all heat sources have been shut down. In Season 2 (48 days), you and your alliance fight to recapture cities, generate warmth, and accumulate as much <strong>Rare Soil</strong> as possible."></p>
+
+<div style="background: #0a0c0e; border: 1px solid var(--primary); padding: 15px; border-radius: 8px; margin: 15px 0;">
+    <div style="color: var(--primary); font-weight: bold; font-size: 0.85rem; margin-bottom: 10px; text-align:center;">
+        TEMPERATURZONEN | TEMPERATURE ZONES
+    </div>
+    <table>
+        <tr><th data-de="Zone" data-en="Zone">Zone</th><th data-de="Temperatur" data-en="Temperature">Temperatur</th><th data-de="Hinweis" data-en="Note">Hinweis</th></tr>
+        <tr><td style="color:var(--primary)">Zone 1 (Rand)</td><td>−15 °C</td><td data-de="Sicher mit Ofen" data-en="Safe with Furnace">Sicher mit Ofen</td></tr>
+        <tr><td>Zone 2–3</td><td>−30 °C / −40 °C</td><td data-de="Allianz-Ofen nötig" data-en="Alliance Furnace needed">Allianz-Ofen nötig</td></tr>
+        <tr><td>Zone 4–5</td><td>−50 °C / −60 °C</td><td data-de="Sturm-Gebiet" data-en="Storm zone">Sturm-Gebiet</td></tr>
+        <tr><td>Zone 6</td><td>−70 °C</td><td data-de="Hochgefährlich" data-en="Highly dangerous">Hochgefährlich</td></tr>
+        <tr><td style="color:var(--danger)">Zone 7 (Kapitol)</td><td>−80 °C</td><td data-de="Nur koordiniert angreifbar" data-en="Only attackable coordinated">Nur koordiniert</td></tr>
+    </table>
+    <div style="margin-top:10px; font-size:0.65rem; text-align:center; color:var(--accent); text-transform:uppercase;">
+        Wärmemanagement ist überlebenswichtig | Heat management is essential for survival
+    </div>
+</div>
+
+<h4 data-de="Saisonziel" data-en="Season Objective">Saisonziel</h4>
+<p data-de="Das Ranking am Saisonende basiert auf der <strong>gesamt angehäuften Seltenen Erde</strong> – nicht auf dem Territorialbesitz zum letzten Tag (Unterschied zu S1!). Jede Sekunde, die eine Stadt oder Ausgrabungsstätte besetzt ist, zählt." 
+   data-en="The end-of-season ranking is based on <strong>total accumulated Rare Soil</strong> — not territory owned on the last day (unlike S1!). Every second a city or dig site is occupied counts."></p>
+
+<div style="border-left: 4px solid var(--accent); background: rgba(251,191,36,0.06); padding:10px; font-size:0.8rem; margin-top:10px;">
+    ⚠️ <strong data-de="Wichtige Änderung vs. S1:" data-en="Key change vs. S1:">Wichtige Änderung vs. S1:</strong>
+    <span data-de=" Aggressiv früh expandieren lohnt sich stärker als eine defensive Halte-Strategie. Auch verloren gegangene Besetzungen zählen ins Ranking." 
+          data-en=" Aggressive early expansion pays off more than a defensive hold strategy. Even lost occupations count toward the ranking."></span>
+</div>
+```
+
+</div>
+
+<!-- ──────────────────────────────────────────────────────
+     12.2  MECHANIKEN & RESSOURCEN
+────────────────────────────────────────────────────── -->
+
+<div class="card" id="mechanics">
+    <h3 data-de="12.2 Mechaniken & Ressourcen" data-en="12.2 Mechanics & Resources">12.2 Mechaniken & Ressourcen</h3>
+
+```
+<h4 data-de="Das Temperatur-System" data-en="The Temperature System">Das Temperatur-System</h4>
+<p data-de="Die Temperatur ist der zentrale Überlebens-Mechanismus in S2. Sie beeinflusst permanent: Basis-Stats, Ressourcenproduktion, Truppenresistenz, Moral und Heilungskapazität. Die Skala reicht von −270 °C bis +300 °C."
+   data-en="Temperature is the central survival mechanic in S2. It permanently affects: base stats, resource production, troop resistance, morale, and healing capacity. The scale ranges from −270 °C to +300 °C."></p>
+
+<table>
+    <tr><th data-de="Status" data-en="Status">Status</th><th data-de="Schwelle" data-en="Threshold">Schwelle</th><th data-de="Auswirkung" data-en="Effect">Auswirkung</th></tr>
+    <tr><td style="color:var(--danger)">🔥 Brennend</td><td>≥ +40 °C</td><td data-de="Basis verliert Haltbarkeit; 'On Fire'-Timer läuft" data-en="Base loses durability; 'On Fire' timer starts">Basis verliert Haltbarkeit</td></tr>
+    <tr><td style="color:var(--primary)">✅ Normal</td><td>−19 bis +39 °C</td><td data-de="Alle Boni aktiv, keine Einschränkungen" data-en="All bonuses active, no restrictions">Alle Boni aktiv</td></tr>
+    <tr><td style="color:#60a5fa)">❄️ Fast gefroren</td><td>−20 °C</td><td data-de="5-Minuten-Countdown – sofort aufheizen!" data-en="5-minute countdown — heat up immediately!">5-Min-Countdown</td></tr>
+    <tr><td style="color:var(--accent)">🧊 Gefroren</td><td>&lt; −20 °C</td><td data-de="Alle Boni weg, kein Rally, kein Teleport, Ressourcen verlierbar" data-en="All bonuses gone, no rally, no teleport, resources vulnerable">Alle Boni verloren</td></tr>
+</table>
+
+<h4 data-de="Wärmequellen" data-en="Sources of Heat">Wärmequellen</h4>
+<table>
+    <tr><th data-de="Quelle" data-en="Source">Quelle</th><th data-de="Effekt" data-en="Effect">Effekt</th></tr>
+    <tr><td><strong>Hochtemperaturofen</strong></td><td data-de="Aktiv: Wärme+; Overdrive: Wärme+++ (4× Kohleverbrauch)" data-en="Active: Heat+; Overdrive: Heat+++ (4× coal)">Aktiv: Wärme+; Overdrive: +++</td></tr>
+    <tr><td><strong>Allianzofen</strong></td><td data-de="Wärmt alle Basen im Einflussradius; muss 24/7 laufen" data-en="Heats all bases in radius; must run 24/7">Einflussradius-Heizung</td></tr>
+    <tr><td><strong>Polare Städte</strong></td><td data-de="Eine besetzte Stadt heizt das gesamte Feld; ideal für Hive" data-en="Occupied city heats entire tile; ideal for hive">Feldheizung</td></tr>
+    <tr><td><strong>Spionageflugzeug</strong></td><td data-de="Verbündete können deine Basis temporär aufheizen" data-en="Allies can temporarily heat your base">Temp. Aufheizung</td></tr>
+    <tr><td><strong>Aktivität</strong></td><td data-de="Squads losschicken senkt kurzfristig die eigene Temperatur" data-en="Sending squads temporarily lowers your own temperature">⚠️ Senkt Temp.</td></tr>
+    <tr><td><strong>Nuklearofen</strong></td><td data-de="Globale Kartenheizung wenn aktiviert (Spätsaison)" data-en="Global map heating when activated (late season)">Global (Spätsaison)</td></tr>
+</table>
+
+<h4 data-de="Neue Ressourcen" data-en="New Resources">Neue Ressourcen</h4>
+<table>
+    <tr><th data-de="Ressource" data-en="Resource">Ressource</th><th data-de="Herkunft" data-en="Source">Herkunft</th><th data-de="Verwendung" data-en="Use">Verwendung</th></tr>
+    <tr><td><strong>Kohle (Coal)</strong></td><td data-de="Ausgrabungsstätten, Zombies/Elites, Radar-Missionen, Kohle-Felder" data-en="Dig Sites, Zombies/Elites, Radar missions, Coal fields">Abbau, Kills, Radar</td></tr>
+    <tr><td style="color:var(--accent)"></td><td></td><td data-de="Brennstoff für Hochofen; Bau der Titanlegierungsfabrik" data-en="Fuel for Furnace; building Titanium Alloy Factory">Ofen-Brennstoff, Baumaterial</td></tr>
+    <tr><td><strong>Titanlegierung</strong></td><td data-de="Titanlegierungsfabrik (kontinuierlich), Zombies/Doom Elites, Titan-Felder" data-en="Titanium Alloy Factory (continuous), Zombies/Doom Elites, Titan fields">Fabrik, Kills, Felder</td></tr>
+    <tr><td style="color:var(--accent)"></td><td></td><td data-de="Ofen-Upgrades; Militärbasen-Bau" data-en="Furnace upgrades; Military base construction">Ofen-Upgrade, Militärbasen</td></tr>
+    <tr><td><strong>Seltene Erde (Rare Soil)</strong></td><td data-de="Besetzte Städte & Ausgrabungsstätten (kontinuierlich)" data-en="Occupied cities & dig sites (continuously)">Städte, Ausgrabungsstätten</td></tr>
+    <tr><td style="color:var(--accent)"></td><td></td><td data-de="Season-Ranking; Allianzrang-Belohnungen" data-en="Season ranking; alliance reward tier">Season-Ranking</td></tr>
+</table>
+
+<div style="border: 1px dashed var(--dim); padding:10px; font-size:0.75rem; margin:12px 0; border-radius:4px;">
+    <strong style="color:var(--primary);">RESSOURCENFELD-CHANCEN | RESOURCE FIELD ODDS</strong><br>
+    <span style="color:var(--text-secondary);">11,11%:</span> Kohle / Titan / Diamant<br>
+    <span style="color:var(--text-secondary);">22,22%:</span> Gold / Eisen / Nahrung
+</div>
+
+<h4 data-de="Sturm-Management" data-en="Storm Management">Sturm-Management</h4>
+<p data-de="Stürme werden <strong>Stunden vorher</strong> per Benachrichtigung (oben links) angekündigt. Samstags können Cold Waves die Kartentemperatur auf bis zu −50 bis −60 °C für 4 Stunden senken."
+   data-en="Storms are announced <strong>hours in advance</strong> via notification (top left). On Saturdays, Cold Waves can drop the map temperature to −50 to −60 °C for 4 hours."></p>
+<ul>
+    <li data-de="<strong>Kohle auffüllen</strong> sofort nach der Ankündigung" data-en="<strong>Refill coal</strong> immediately after the announcement"></li>
+    <li data-de="<strong>Auto-Zündung</strong> am Ofen aktivieren" data-en="<strong>Auto-ignition</strong> on furnace activated"></li>
+    <li data-de="<strong>R4/R5 zündet den Allianzofen</strong> vor dem Sturm an" data-en="<strong>R4/R5 lights the Alliance Furnace</strong> before the storm"></li>
+    <li data-de="<strong>Overdrive</strong> während des Sturms; danach sofort wieder auf Normal – sonst Kohle-Verlust!" data-en="<strong>Overdrive</strong> during storm; switch back to Normal immediately after — otherwise coal drain!"></li>
+    <li data-de="<strong>Mindest-Reserve:</strong> 300.000 Kohle für Sturm-Events sicher aufbewahren" data-en="<strong>Minimum reserve:</strong> Store 300,000 coal safely for storm events"></li>
+</ul>
+```
+
+</div>
+
+<!-- ──────────────────────────────────────────────────────
+     12.3  GEBÄUDE, HELDEN & EXKLUSIVE ITEMS
+────────────────────────────────────────────────────── -->
+
+<div class="card" id="exclusive">
+    <h3 data-de="12.3 Exklusive Helden, Waffen & Gebäude" data-en="12.3 Exclusive Heroes, Weapons & Buildings">12.3 Exklusive Helden, Waffen & Gebäude</h3>
+
+```
+<h4 data-de="Titanlegierungsfabrik" data-en="Titanium Alloy Factory">Titanlegierungsfabrik</h4>
+<p data-de="Das wichtigste Gebäude – <strong>sofort am Tag 1 bauen</strong>. Produziert kontinuierlich Titanlegierung zum Ofen-Upgrade. Max. Level 30, unabhängig vom HQ-Level."
+   data-en="The most important building — <strong>build it on Day 1</strong>. Continuously produces Titanium Alloy for Furnace upgrades. Max Level 30, independent of HQ level."></p>
+
+<div style="background: rgba(74,222,128,0.05); border: 1px solid var(--primary); border-radius:6px; padding:12px; margin:10px 0; font-size:0.8rem;">
+    <strong style="color:var(--primary);">⚡ OPTIMALE UPGRADE-REIHENFOLGE | OPTIMAL UPGRADE ORDER</strong><br><br>
+    <span data-de="✅ Fabrik 1 → Level 15 → dann Fabrik 2 freischalten<br>✅ Fabrik 2 → Level 15 → dann Fabrik 3 freischalten<br>✅ Fabrik 3 → Level 15 → dann Fabrik 4 freischalten<br>✅ Erst danach alle vier gleichmäßig auf 15+ steigern<br><br>⚠️ Weekly-Pass-Tipp: Das geschenkte Fabrikgebäude NICHT zuerst upgraden – mache es als letztes. Es ist deutlich effizienter, erst alle anderen auf Lv.15 zu bringen." 
+          data-en="✅ Factory 1 → Level 15 → unlock Factory 2<br>✅ Factory 2 → Level 15 → unlock Factory 3<br>✅ Factory 3 → Level 15 → unlock Factory 4<br>✅ Only then upgrade all four equally past 15<br><br>⚠️ Weekly Pass tip: Do NOT upgrade the gifted factory first — save it for last. Far more efficient to bring all others to Lv.15 first."></span>
+</div>
+
+<h4 data-de="Hochtemperaturofen (High-Heat Furnace)" data-en="High-Heat Furnace">Hochtemperaturofen</h4>
+<table>
+    <tr><th data-de="Modus" data-en="Mode">Modus</th><th data-de="Kohle/Min" data-en="Coal/min">Kohle/Min</th><th data-de="Wärme" data-en="Heat">Wärme</th><th data-de="Empfehlung" data-en="Recommendation">Empfehlung</th></tr>
+    <tr><td data-de="Normal" data-en="Normal">Normal</td><td>Standard</td><td>+</td><td data-de="Dauerbetrieb" data-en="Continuous operation">Dauerbetrieb</td></tr>
+    <tr><td data-de="Overdrive (Überhitzung)" data-en="Overdrive (Overheat)">Overdrive</td><td>4× Standard</td><td>+++</td><td data-de="Nur im Sturm!" data-en="Only during storms!">Nur im Sturm!</td></tr>
+</table>
+<p style="font-size:0.75rem;" data-de="Max Level 30, unabhängig vom HQ. Steigert Virus-Resistenz UND Basistemperatur. Sofort am Tag 1 upgraden!" data-en="Max Level 30, independent of HQ. Increases Virus Resistance AND base temperature. Upgrade immediately on Day 1!"></p>
+
+<h4 data-de="Allianzofen (Alliance Furnace)" data-en="Alliance Furnace">Allianzofen (Alliance Furnace)</h4>
+<p data-de="Muss von R4/R5 auf der Karte gebaut werden. Mitglieder spenden Kohle und Seltene Erden zur Aktivierung. <strong>Schützt alle Basen im markierten Bereich vor Einfrieren.</strong> Muss 24/7 aktiv sein."
+   data-en="Must be built on the map by R4/R5. Members donate Coal and Rare Earth to activate it. <strong>Protects all bases in the marked area from freezing.</strong> Must run 24/7."></p>
+
+<h4 data-de="Militärbasen" data-en="Military Bases">Militärbasen</h4>
+<p data-de="Verfügbar ab Ofen-Level 30. Je eine Basis für Flieger, Raketen und Panzer. Jedes Level gewährt <strong>+0,5% Schadensbonus</strong> für den entsprechenden Truppentyp." 
+   data-en="Available from Furnace Level 30. One base each for Aircraft, Missiles, and Tanks. Each level grants <strong>+0.5% damage bonus</strong> for the corresponding troop type."></p>
+
+<h4 data-de="Helden – Violet (SSR → UR)" data-en="Heroes – Violet (SSR → UR)">Helden – Violet (SSR → UR)</h4>
+<p data-de="Violet ist der exklusive S2-UR-Held. Die Beförderung von SSR auf UR ist ab <strong>Ofen-Level 30</strong> möglich, sobald Violet 5 Sterne erreicht hat. Ziel: <strong>Honor Wall (Ehrenwand) Level 60</strong> (optimal: Level 160)."
+   data-en="Violet is the exclusive S2 UR hero. Promotion from SSR to UR is possible from <strong>Furnace Level 30</strong> once Violet has 5 stars. Target: <strong>Honor Wall Level 60</strong> (optimal: Level 160)."></p>
+
+<div style="border: 1px dashed var(--dim); border-radius:4px; padding:10px; font-size:0.75rem; margin:8px 0;">
+    <strong style="color:var(--primary);">VIOLET-STRATEGIE | VIOLET STRATEGY</strong><br>
+    <span data-de="→ Sammle 500.000 Fähigkeits-Medaillen und investiere alles in Violet zur UR-Beförderung<br>→ Nach der Beförderung werden 1.600 Fragmente erstattet<br>→ Perfektes Timing: Donnerstags-MVP-Event nutzen<br>→ Gratis-Freischaltungen: McGregor / Williams<br>→ Waffen-Splitter verfügbar für: Kim / DVA / Tesla" 
+          data-en="→ Collect 500,000 Skill Medals and invest everything into Violet for UR promotion<br>→ After promotion, 1,600 fragments are refunded<br>→ Perfect timing: use Thursday MVP event<br>→ Free unlocks: McGregor / Williams<br>→ Weapon shard chests available for: Kim / DVA / Tesla"></span>
+</div>
+
+<h4 data-de="Weitere Helden-Boni (S2)" data-en="Other Hero Bonuses (S2)">Weitere Helden-Boni (S2)</h4>
+<ul>
+    <li><strong>Violet &amp; Murphy:</strong> <span data-de="−5% Schaden durch Monster" data-en="−5% damage from monsters">−5% Schaden durch Monster</span></li>
+    <li><strong>Carlie:</strong> <span data-de="+10% Schaden an Monstern" data-en="+10% damage to monsters">+10% Schaden an Monstern</span></li>
+    <li><strong>Ewiges Frostschloss (Frozen Castle Skin):</strong> <span data-de="Kein Kälteschaden; 10 Daily Likes = Speedup-Belohnungen für den Skin-Besitzer" data-en="No cold damage; 10 Daily Likes = Speedup rewards for the skin owner">Kein Kälteschaden; Daily Likes = Speedups</span></li>
+</ul>
+```
+
+</div>
+
+<!-- ──────────────────────────────────────────────────────
+     12.4  EVENTS & STRATEGIEN
+────────────────────────────────────────────────────── -->
+
+<div class="card" id="strategy">
+    <h3 data-de="12.4 Events & Strategien" data-en="12.4 Events & Strategies">12.4 Events & Strategien</h3>
+
+```
+<h4 data-de="Event-Kalender (8 Wochen)" data-en="Event Calendar (8 Weeks)">Event-Kalender (8 Wochen)</h4>
+<table style="font-size:0.72rem;">
+    <tr>
+        <th data-de="Event" data-en="Event">Event</th>
+        <th data-de="Woche(n)" data-en="Week(s)">Woche(n)</th>
+        <th data-de="Ziel / Strategie" data-en="Goal / Strategy">Ziel / Strategie</th>
+    </tr>
+    <tr><td><strong>City Clash S2</strong></td><td>WK1–8</td><td data-de="Städte besetzen für Seltene Erde & Ofenausbau" data-en="Occupy cities for Rare Soil & Furnace upgrades">Städte besetzen → Seltene Erde</td></tr>
+    <tr><td><strong>Cold Wave Incoming</strong></td><td>WK1–8</td><td data-de="Monster töten für Kohle &amp; Titan; Titanlegierungsfabrik &amp; Ofen upgraden; Blizzard überleben" data-en="Kill monsters for Coal & Titan; upgrade factories and furnace; survive blizzard">Kills → Fabrik- &amp; Ofen-Upgrades</td></tr>
+    <tr><td><strong>Dig Site Clash</strong></td><td>WK1–8</td><td data-de="Ausgrabungsstätten einnehmen für mehr Kohle &amp; Ranking-Belohnungen" data-en="Capture Dig Sites for more Coal & ranking rewards">Ausgrabungsstätten → Kohle</td></tr>
+    <tr><td><strong>Polar Dishes</strong></td><td>WK2–8</td><td data-de="Tägliche Aktivitäten → Zutaten → Hundekuchen → Belohnungen" data-en="Daily activities → ingredients → dog food → rewards">Tägliche Aufgaben abschließen</td></tr>
+    <tr><td><strong>Bestienkrise (Beast Crisis)</strong></td><td>Di+Fr</td><td data-de="30 Wellen gegen Allianzofen verteidigen. Passende Garnisonen mit ATK-Boni schicken" data-en="Defend Alliance Furnace against 30 waves. Send garrisons with matching ATK bonuses">Garnisonen mit passenden Boni</td></tr>
+    <tr><td><strong>Hero Promotion</strong></td><td>WK2–5</td><td data-de="Violet SSR → 5 Sterne → UR befördern" data-en="Violet SSR → 5 stars → promote to UR">Violet auf 5★ → UR</td></tr>
+    <tr><td><strong>Faction Awards</strong></td><td>WK3–4</td><td data-de="Präsident wählt Fraktion: Gendarmerie oder Rebellen (je 4 Kampfzonen)" data-en="President chooses faction: Gendarmerie or Rebels (4 warzones each)">Fraktion wählen (Präsident)</td></tr>
+    <tr><td><strong>Rare Soil War</strong></td><td>WK4–7</td><td data-de="Angreifer vs. Verteidiger; Seltene Erde plündern, Honor Furnace angreifen" data-en="Attacker vs. Defender; plunder Rare Soil, attack Honor Furnace">Seltene Erde plündern/sichern</td></tr>
+    <tr><td><strong>Nuclear Furnace aktivieren</strong></td><td>WK5</td><td data-de="Alle Kräfte bündeln um den Nuklearofen zu aktivieren (globale Kartenheizung)" data-en="Unite all forces to activate the Nuclear Furnace (global map heating)">Koordinierter Allianz-Push</td></tr>
+    <tr><td><strong>Nuclear Furnace War</strong></td><td>WK5–7</td><td data-de="Nuklearofen kontrollieren = Präsident werden" data-en="Control the Nuclear Furnace = become President">Nuklearofen besetzen</td></tr>
+    <tr><td><strong>Rare Soil Showdown</strong></td><td>WK5–8</td><td data-de="Eskalation: Angreifer erhalten höheren Anteil an erbeuteter Seltener Erde" data-en="Escalation: Attacker gains higher share of plundered Rare Soil">Maximale Angreifer-Boni</td></tr>
+    <tr><td><strong>Faction Duel</strong></td><td>WK7–8</td><td data-de="Wochenpunkte → Fraktion mit mehr Punkten wird Angreifer; Sonntag: Entscheidungsschlacht am Nuklearofen" data-en="Weekly points → faction with more points becomes attacker; Sunday: decisive battle at Nuclear Furnace">Punktesammeln für Sonntags-Battle</td></tr>
+    <tr><td><strong>Season Settlement</strong></td><td>WK8</td><td data-de="Belohnungen basieren auf gehaltener Seltener Erde der Allianzen/Fraktionen" data-en="Rewards based on Rare Soil held by alliances/factions">Abschluss-Ranking</td></tr>
+</table>
+
+<h4 data-de="Tägliche Bosse (Wanted Bosses)" data-en="Daily Bosses (Wanted Bosses)">Tägliche Bosse</h4>
+<p style="font-size:0.8rem;">
+    <strong>Mammut / Code 39</strong> (Konter: Panzer) → <span style="color:var(--primary)">Flugzeuge +50% DMG</span><br>
+    <strong>Gorilla / Code 64</strong> (Konter: Flieger) → <span style="color:var(--primary)">Raketen +50% DMG</span><br>
+    <strong>Eisbär / Code 87</strong> (Konter: Raketen) → <span style="color:var(--primary)">Panzer +50% DMG</span>
+</p>
+<div style="border-left: 3px solid var(--accent); background: rgba(251,191,36,0.06); padding:8px; font-size:0.75rem; margin-top:8px;" data-de="💡 Tipp: Bitte Alliierte, deine Basis auf 70°C zu heizen, bevor du einen Wanted Boss angreifst – das gibt einen Score-Bonus!" data-en="💡 Tip: Ask allies to heat your base to 70°C before attacking a Wanted Boss — this gives a score bonus!">💡 Tipp: Basis auf 70°C heizen lassen bevor Wanted Boss → Score-Bonus!</div>
+
+<h4 data-de="Ausgrabungsstätten (Dig Sites)" data-en="Dig Sites">Ausgrabungsstätten (Dig Sites)</h4>
+<ul style="font-size:0.82rem;">
+    <li data-de="<strong>Max 4 Dig Sites</strong> gleichzeitig besetzbar; max. <strong>2 Einnahmen pro Tag</strong>" data-en="<strong>Max 4 Dig Sites</strong> simultaneously; max. <strong>2 captures per day</strong>"></li>
+    <li data-de="<strong>Einnahme-Ablauf:</strong> Mutierten Panzerbiest besiegen → 10 Squads zur Verstärkung → Capture in 4 Stunden abschließen" data-en="<strong>Capture process:</strong> Defeat mutated beast → reinforce with 10 squads → complete capture within 4 hours"></li>
+    <li data-de="<strong>Nach Einnahme:</strong> 36-Stunden-Schutzperiode; umgeben von Wachen" data-en="<strong>After capture:</strong> 36-hour protection period; surrounded by guards"></li>
+    <li data-de="Eingefrorene Biester müssen zuerst <strong>aufgetaut</strong> und dann durch mehrfache Rallies besiegt werden" data-en="Frozen beasts must first be <strong>thawed</strong> and then defeated through multiple rallies"></li>
+    <li data-de="Hohe Virus-Resistenz im Squad ist Pflicht für effiziente Captures" data-en="High Virus Resistance in the squad is mandatory for efficient captures"></li>
+</ul>
+
+<h4 data-de="Fraktion: Gendarmerie vs. Rebellen" data-en="Faction: Gendarmerie vs. Rebels">Fraktion: Gendarmerie vs. Rebellen</h4>
+<p style="font-size:0.8rem;" data-de="Ab Woche 3 wählt der Präsident des Warzones die Fraktion (Gendarmerie oder Rebellen), die je 4 Kampfzonen enthält. Die Fraktion beeinflusst die Kriegs-Deklarationsreihenfolge beim Rare Soil War. Allianzen derselben Fraktion können sich NICHT gegenseitig bekriegen." data-en="From Week 3, the warzone President chooses a faction (Gendarmerie or Rebels), each containing 4 warzones. The faction affects the war declaration order in Rare Soil War. Alliances of the same faction CANNOT declare war on each other."></p>
+```
+
+</div>
+
+<!-- ──────────────────────────────────────────────────────
+     12.5  ALLIANZ & HIVE-TIPPS
+────────────────────────────────────────────────────── -->
+
+<div class="card" id="alliance">
+    <h3 data-de="12.5 Allianz & Hive-Tipps" data-en="12.5 Alliance & Hive Tips">12.5 Allianz & Hive-Tipps</h3>
+
+```
+<h4 data-de="Hive-Positionierung" data-en="Hive Positioning">Hive-Positionierung</h4>
+<p data-de="Die Hive-Position ist entscheidend für das Überleben der gesamten Allianz in S2."
+   data-en="Hive positioning is critical for the entire alliance's survival in S2."></p>
+<ul style="font-size:0.82rem;">
+    <li data-de="<strong>Immer innerhalb des Allianzofens</strong> positionieren (Einflussradius)" data-en="<strong>Always position within the Alliance Furnace</strong> (influence radius)"></li>
+    <li data-de="<strong>Schwächere Spieler</strong> in die Mitte näher am Ofen, <strong>stärkere außen</strong>" data-en="<strong>Weaker players</strong> in the center close to the furnace, <strong>stronger players outside</strong>"></li>
+    <li data-de="<strong>Nahe an Polaren Städten</strong> stationieren – eine besetzte Stadt heizt das gesamte Feld" data-en="<strong>Position near Polar Cities</strong> — an occupied city heats the entire tile"></li>
+    <li data-de="Für Expeditionen: <strong>Immer in Gruppen von 3</strong> losschicken, damit ihr euch gegenseitig aufheizen könnt" data-en="For expeditions: <strong>Always send in groups of 3</strong> so you can mutually heat each other"></li>
+</ul>
+
+<h4 data-de="Der −19 °C Überlebenstrick" data-en="The −19 °C Survival Trick">Der −19 °C Überlebenstrick</h4>
+<p data-de="Das absolute Minimum um bei einem −50 °C-Sturm <strong>nicht einzufrieren</strong> – auch ohne Allianzofen in der Nähe:"
+   data-en="The absolute minimum to <strong>not freeze</strong> during a −50 °C storm — even without a nearby Alliance Furnace:"></p>
+
+<div style="background: #0a0c0e; border: 1px solid var(--primary); border-radius:6px; padding:12px; margin:10px 0; text-align:center;">
+    <div style="color:var(--primary); font-size:0.85rem; font-weight:bold; margin-bottom:8px;">−19 °C TRICK</div>
+    <table style="width:100%; font-size:0.75rem;">
+        <tr>
+            <td style="color:var(--text-secondary);">Turm des Sieges Lv.3 (Victory Tower)</td>
+            <td style="color:var(--primary);">+5 °C</td>
+        </tr>
+        <tr>
+            <td style="color:var(--text-secondary);">Forschung 'Intensive Überlastung' (Intense Overdrive)</td>
+            <td style="color:var(--primary);">+6 °C</td>
+        </tr>
+        <tr>
+            <td style="color:var(--text-secondary);">Dorf-Stationierung</td>
+            <td style="color:var(--primary);">+5 °C</td>
+        </tr>
+        <tr>
+            <td style="font-weight:bold; color:var(--text);">Gesamt-Bonus</td>
+            <td style="font-weight:bold; color:var(--primary);">+16 °C → −34 °C → <span style="color:var(--primary)">SAFE</span></td>
+        </tr>
+    </table>
+    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:6px;" data-de="→ Ergebnis: −50 + 16 = −34°C. Aber: Recon Aircraft (+3°C Lv.2) und Spionageflugzeuge von Verbündeten können noch helfen." 
+         data-en="→ Result: −50 + 16 = −34°C. But: Recon Aircraft (+3°C Lv.2) and allies' spy planes can help further."></div>
+</div>
+
+<h4 data-de="Allianz-Koordination" data-en="Alliance Coordination">Allianz-Koordination</h4>
+<ul style="font-size:0.82rem;">
+    <li data-de="<strong>Spionageflugzeug (Recon Aircraft)</strong> nutzen um eingefrorene Verbündete aufzutauen – BEVOR sie angegriffen werden" data-en="<strong>Recon Aircraft</strong> to thaw frozen allies — BEFORE they are attacked"></li>
+    <li data-de="<strong>Overdrive-Aktivierung koordinieren</strong>: Nicht alle gleichzeitig auf Overdrive, Kohle-Reserven beachten" data-en="<strong>Coordinate Overdrive activation</strong>: Not everyone at once, watch coal reserves"></li>
+    <li data-de="<strong>Titanlegierung priorisieren</strong> für Top-Spieler der Allianz, damit Öfen schnell gelevelt werden" data-en="<strong>Prioritize Titanium Alloy</strong> for alliance top players so furnaces level up quickly"></li>
+    <li data-de="<strong>R4/R5</strong> müssen den Allianzofen aktiv managen und täglich Kohle-Spenden koordinieren" data-en="<strong>R4/R5</strong> must actively manage Alliance Furnace and coordinate daily coal donations"></li>
+</ul>
+
+<p class="alert" data-de="⚡ Berufs-Spezialisierung Feuerbombe: Erhöht die Temperatur im 9×9-Umkreis um +10°C. Frostbombe: Senkt gegnerische Temperatur um 15°C. Doppelter Tausch: Kohle/Titan im Verhältnis 1:2 tauschen." 
+   data-en="⚡ Profession Firebomb: Raises temperature in 9×9 radius by +10°C. Frostbomb: Lowers enemy temperature by 15°C. Double Exchange: Swap Coal/Titan at 1:2 ratio."></p>
+
+<!-- Server-Teleport Hinweis -->
+<div style="border: 1px solid var(--dim); border-radius:4px; padding:10px; font-size:0.78rem; margin-top:10px;">
+    <strong style="color:var(--primary);">SERVER-TELEPORT (ab Woche 3)</strong><br>
+    <span data-de="Ab Woche 3 kannst du kostenlos auf andere Server teleportieren und zurück. Nutze dies um Monster auf anderen Servern für die tägliche Aufgabe 'Kill 5 Zombies' zu erledigen (z.B. Goldene Zombies oder Generals-Panzer)." 
+          data-en="From Week 3, you can teleport to other servers for free and back. Use this to complete the daily 'Kill 5 Zombies' task on other servers (e.g. Golden Zombies or General's Tanks)."></span>
+</div>
+```
+
+</div>
+
+<!-- ──────────────────────────────────────────────────────
+     12.6  BERUFE (PROFESSIONEN)
+────────────────────────────────────────────────────── -->
+
+<div class="card" id="professions">
+    <h3 data-de="12.6 Berufe (Professionen) – Empfehlungen" data-en="12.6 Professions – Recommendations">12.6 Berufe – Empfehlungen</h3>
+
+```
+<p style="font-size:0.8rem;" data-de="Berufe können bis Level 70 entwickelt werden. Folgende Skills sind besonders wertvoll für S2 (Quelle: r/LastWarBjornHub, Community-Guides):"
+   data-en="Professions can be developed up to Level 70. The following skills are especially valuable for S2 (Source: r/LastWarBjornHub, Community Guides):"></p>
+
+<h4>Ingenieur (Engineer) – S+ &amp; S Priorität</h4>
+<table style="font-size:0.72rem;">
+    <tr><th data-de="Lv." data-en="Lv.">Lv.</th><th data-de="Skill" data-en="Skill">Skill</th><th data-de="Tier" data-en="Tier">Tier</th><th data-de="Empf. Stufe" data-en="Rec. Level">Empf.</th></tr>
+    <tr><td>1</td><td>Combat Experience</td><td style="color:#f59e0b">S+</td><td>3/3</td></tr>
+    <tr><td>10</td><td>Building Inspiration 1</td><td style="color:#f59e0b">S+</td><td>3/3 <span style="color:var(--text-secondary); font-size:0.72rem;" data-de="(Titan-Fabriken!)" data-en="(Titan factories!)">(Titan-Fabriken!)</span></td></tr>
+    <tr><td>10</td><td>Build For Free / Research For Free</td><td style="color:#4ade80">S</td><td>5/5</td></tr>
+    <tr><td>15</td><td>Build Now / Research Now</td><td style="color:#4ade80">S</td><td>4/5</td></tr>
+    <tr><td>25</td><td>Siege Inspiration</td><td style="color:#f59e0b">S+</td><td>3/3</td></tr>
+    <tr><td>35</td><td>Professional Insights</td><td style="color:#f59e0b">S+</td><td>5/5</td></tr>
+    <tr><td>35</td><td>Recycling</td><td style="color:#4ade80">S</td><td>4/5</td></tr>
+    <tr><td>40</td><td>Intense Overdrive</td><td style="color:#4ade80">S</td><td>2/3</td></tr>
+    <tr><td>55</td><td>One More</td><td style="color:#f59e0b">S+</td><td>5/5 <span style="color:var(--text-secondary); font-size:0.72rem;">(Zuerst!)</span></td></tr>
+    <tr><td>55</td><td>Support Boost</td><td style="color:#f59e0b">S+</td><td>5/5</td></tr>
+    <tr><td>65</td><td>Master Builder</td><td style="color:#f59e0b">S+</td><td>5/5</td></tr>
+    <tr><td>70</td><td>Instant Gathering</td><td style="color:#4ade80">S</td><td>5/5</td></tr>
+</table>
+
+<h4 data-de="Kriegsführer (War Leader) – S+ &amp; S Priorität" data-en="War Leader – S+ & S Priority">Kriegsführer (War Leader) – S+ &amp; S</h4>
+<table style="font-size:0.72rem;">
+    <tr><th>Lv.</th><th>Skill</th><th>Tier</th><th data-de="Empf." data-en="Rec.">Empf.</th></tr>
+    <tr><td>1</td><td>Immediate Return</td><td style="color:#f59e0b">S+</td><td>3/5</td></tr>
+    <tr><td>1</td><td>Combat Experience</td><td style="color:#f59e0b">S+</td><td>3/3</td></tr>
+    <tr><td>5</td><td>Drill Ground Prep</td><td style="color:#f59e0b">S+</td><td>5/5</td></tr>
+    <tr><td>10</td><td>Craze</td><td style="color:#f59e0b">S+</td><td>5/5</td></tr>
+    <tr><td>10</td><td>Building Inspiration 1</td><td style="color:#f59e0b">S+</td><td>3/3</td></tr>
+    <tr><td>20</td><td>Warefare Supplies</td><td style="color:#f59e0b">S+</td><td>5/5 <span style="color:var(--text-secondary); font-size:0.72rem;">(Farm-Limit +50%)</span></td></tr>
+    <tr><td>25</td><td>Inspire</td><td style="color:#f59e0b">S+</td><td>5/5</td></tr>
+    <tr><td>35</td><td>Professional Insights</td><td style="color:#f59e0b">S+</td><td>5/5</td></tr>
+    <tr><td>40</td><td>Intense Overdrive</td><td style="color:#4ade80">S</td><td>2/3</td></tr>
+    <tr><td>55</td><td>Hyper War Fever</td><td style="color:#f59e0b">S+</td><td>5/5 <span style="color:var(--text-secondary); font-size:0.72rem;">(Craze max. nötig!)</span></td></tr>
+    <tr><td>60</td><td>Efficient Training</td><td style="color:#f59e0b">S+</td><td>5/5 <span style="color:var(--text-secondary); font-size:0.72rem;">(T10-Kosten!)</span></td></tr>
+    <tr><td>60</td><td>Riot Control</td><td style="color:#4ade80">S</td><td>5/5</td></tr>
+</table>
+
+<div style="font-size:0.75rem; color:var(--text-secondary); margin-top:8px;" data-de="Tier-Legende: S+ = Bestes für S2 | S = Sehr gut | A = Nützlich, aber später upgraden | B = Optional | R = Pflicht (Voraussetzung)" data-en="Tier legend: S+ = Best for S2 | S = Great | A = Useful but upgrade later | B = Optional | R = Required (prerequisite)">
+    Tier: S+ = Bestes für S2 | S = Sehr gut | A = Später | B = Optional | R = Pflicht
+</div>
+```
+
+</div>
+
+<!-- ──────────────────────────────────────────────────────
+     12.7  WOCHENPLAN & FAHRPLAN
+────────────────────────────────────────────────────── -->
+
+<div class="card" id="roadmap">
+    <h3 data-de="12.7 Saison-Fahrplan (Wochenplan)" data-en="12.7 Season Roadmap (Weekly Plan)">12.7 Saison-Fahrplan</h3>
+
+```
+<table style="font-size:0.78rem;">
+    <tr><th data-de="Phase" data-en="Phase">Phase</th><th data-de="Fokus" data-en="Focus">Fokus</th><th data-de="Key-Ziele" data-en="Key Goals">Key-Ziele</th></tr>
+    <tr>
+        <td><strong>Tag 1</strong></td>
+        <td data-de="Sofort-Prio" data-en="Immediate Priority">Sofort-Prio</td>
+        <td style="font-size:0.7rem;" data-de="Titanlegierungsfabrik bauen; Hochofen starten; Kohle-Reserve aufbauen (5.000–10.000); Trucks vor Saisonstart losschicken → 3 Free Deliveries" data-en="Build Titanium Alloy Factory; start Furnace; build coal reserves (5k–10k); send trucks before season start → 3 free deliveries"></td>
+    </tr>
+    <tr>
+        <td><strong>WK1–2</strong></td>
+        <td data-de="Aufbau &amp; Farm" data-en="Build & Farm">Aufbau &amp; Farm</td>
+        <td style="font-size:0.7rem;" data-de="Alle Fabriken schrittweise auf Lv.15; Ofen auf Lv.15+; erste Ausgrabungsstätten einnehmen; Doomwalker täglich (idealerweise Lv.190)" data-en="Gradually bring all factories to Lv.15; Furnace to Lv.15+; capture first Dig Sites; Doomwalker daily (ideally Lv.190)"></td>
+    </tr>
+    <tr>
+        <td><strong>WK3–4</strong></td>
+        <td data-de="Expansion" data-en="Expansion">Expansion</td>
+        <td style="font-size:0.7rem;" data-de="Städte einnehmen; Fraktion wählen; Ofen auf Lv.25+; Violet-Beförderung vorbereiten; Server-Teleport ab Woche 3 nutzen" data-en="Capture cities; choose faction; Furnace to Lv.25+; prepare Violet promotion; use Server Teleport from Week 3"></td>
+    </tr>
+    <tr>
+        <td><strong>WK5–6</strong></td>
+        <td data-de="Krieg &amp; Nuklearofen" data-en="War & Nuclear Furnace">Krieg &amp; Nuklearofen</td>
+        <td style="font-size:0.7rem;" data-de="Ofen auf Lv.30; Militärbasen bauen; Violet UR befördern; Nuklearofen aktivieren; Rare Soil War aktiv spielen" data-en="Furnace to Lv.30; build Military Bases; promote Violet to UR; activate Nuclear Furnace; play Rare Soil War actively"></td>
+    </tr>
+    <tr>
+        <td><strong>WK7–8</strong></td>
+        <td data-de="Finale &amp; Übergang" data-en="Finale & Transition">Finale &amp; Übergang</td>
+        <td style="font-size:0.7rem;" data-de="Faction Duel; Rare Soil Showdown; Ölzeitalter-Forschung für HQ31+ starten; Gutscheine für S3 aufbewahren" data-en="Faction Duel; Rare Soil Showdown; start Oil Age research for HQ31+; save vouchers for S3"></td>
+    </tr>
+</table>
+```
+
+</div>
+
+<!-- ──────────────────────────────────────────────────────
+     12.8  ABSCHLUSS-PHASE & ÜBERGANG ZU S3
+────────────────────────────────────────────────────── -->
+
+<div class="card alert" id="end">
+    <h3 data-de="12.8 Abschluss-Phase & Übergang zu Season 3" data-en="12.8 Final Phase & Transition to Season 3">12.8 Abschluss-Phase &amp; Übergang</h3>
+
+```
+<div style="background: #1f2937; border: 1px solid var(--accent); padding: 10px; border-radius: 4px; margin-bottom: 12px; text-align: center;">
+    <div style="color: var(--accent); font-weight: bold; font-size: 0.85rem;">ROAD TO HQ 31–35 | WEG ZU HQ 31–35</div>
+    <div style="font-size: 0.7rem; color: var(--text);">PFLICHT: TECH CENTER LVL 30 | REQUIRED: TECH CENTER LVL 30</div>
+</div>
+
+<ul>
+    <li data-de="<strong>Ölzeitalter-Forschung:</strong> Muss am Ende von S2 gestartet werden – Pflicht für HQ 31+. Bereite genug Speedups vor!" data-en="<strong>Oil Age Research:</strong> Must be started at the end of S2 — mandatory for HQ 31+. Prepare enough speedups!"></li>
+    <li data-de="<strong>Gutscheine für S3 aufheben:</strong> 1:1 Tausch für S3-Helden möglich. Verbrauch nicht übereilen!" data-en="<strong>Save vouchers for S3:</strong> 1:1 swap for S3 heroes possible. Don't rush spending them!"></li>
+    <li data-de="<strong>Season Ressourcen:</strong> Am Ende werden alle saisonalen Strukturen abgebaut. Übrige Ressourcen werden in Berufs-EXP umgewandelt." data-en="<strong>Season Resources:</strong> All seasonal structures are dismantled at the end. Remaining resources convert to Profession EXP."></li>
+    <li data-de="<strong>S1-Jubiläum-Tipp:</strong> Halte deine Protein-Reserven aus S1 während des S2-Jubiläum-Events im Black Market bereit (Kimberley-Splitter-Tausch)." data-en="<strong>S1 Celebration Tip:</strong> Keep your S1 Protein reserves ready during the S2 Celebration Black Market event (Kimberly shard exchange)."></li>
+</ul>
+
+<div style="border: 1px dashed var(--primary); border-radius:4px; padding:10px; font-size:0.75rem; margin-top:12px;">
+    <strong style="color:var(--primary);">CHECKLISTE SAISONENDE | END-OF-SEASON CHECKLIST</strong><br><br>
+    <span data-de="☐ Ölzeitalter-Forschung gestartet?<br>☐ Tech Center auf Lv.30?<br>☐ Gutscheine für S3 gesichert?<br>☐ Violet UR befördert &amp; Fragmente erstattet?<br>☐ Alle Titanlegierungsfabriken demontiert / Ressourcen verwertet?<br>☐ Kohle und Titan nicht vergeudet (werden zu Prof.-EXP)?<br>☐ Helden-Tausch für S3-Meta vorbereitet?" 
+          data-en="☐ Oil Age Research started?<br>☐ Tech Center at Lv.30?<br>☐ Vouchers secured for S3?<br>☐ Violet promoted to UR & fragments refunded?<br>☐ All Titanium Alloy Factories dismantled / resources used?<br>☐ Coal and Titan not wasted (convert to Prof. EXP)?<br>☐ Hero swap prepared for S3 meta?"></span>
+</div>
+```
+
+</div>
+
+<div class="signature">
+    <span>Build v3.0.0 | Season 2 Strategic Intelligence | Quellen: lastwartutorial.com, lastwarhandbook.com, Community ULG/Reddit | © XLentz</span>
+</div>
