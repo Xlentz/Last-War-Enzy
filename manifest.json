@@ -1,0 +1,21 @@
+{
+    "name": "Last War Enzy – by XLentz",
+    "short_name": "LW Enzy",
+    "description": "Interaktive Enzyklopädie und Strategie-Guide für Last War: Survival",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#0a0c0e",
+    "theme_color": "#0a0c0e",
+    "lang": "de",
+    "icons": [
+        {
+            "src": "apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["games", "utilities"],
+    "screenshots": []
+}
